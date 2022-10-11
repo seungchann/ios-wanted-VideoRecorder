@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - Test
 struct MockUpVideoViewModel: VideoListViewModelProtocol {
     var items: Observable<[VideoListItemViewModelProtocol]> = Observable([])
 }
@@ -120,5 +121,9 @@ extension VideoListViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120
     }
 }
