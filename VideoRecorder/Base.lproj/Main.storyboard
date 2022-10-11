@@ -73,10 +73,6 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="NAf-qj-7IN" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="2m2-9G-H0l"/>
-                            <constraint firstItem="NAf-qj-7IN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xcj-Fi-Sl3"/>
-                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
