@@ -16,7 +16,6 @@
 		6321038428F06E7300CC1609 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6321038228F06E7300CC1609 /* LaunchScreen.storyboard */; };
 		F837AD0E28F47AF2009FF9F9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F837AD0D28F47AF2009FF9F9 /* GoogleService-Info.plist */; };
 		F837AD1028F513F9009FF9F9 /* FirebaseStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F837AD0F28F513F9009FF9F9 /* FirebaseStorageManager.swift */; };
-		F837AD1428F538D5009FF9F9 /* sampleVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F837AD1328F538D5009FF9F9 /* sampleVideo.mp4 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,7 +31,6 @@
 		6321038528F06E7300CC1609 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F837AD0D28F47AF2009FF9F9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F837AD0F28F513F9009FF9F9 /* FirebaseStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageManager.swift; sourceTree = "<group>"; };
-		F837AD1328F538D5009FF9F9 /* sampleVideo.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sampleVideo.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,7 +107,6 @@
 		F837AD1228F538BF009FF9F9 /* Media */ = {
 			isa = PBXGroup;
 			children = (
-				F837AD1328F538D5009FF9F9 /* sampleVideo.mp4 */,
 			);
 			path = Media;
 			sourceTree = "<group>";
@@ -175,7 +172,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6321038428F06E7300CC1609 /* LaunchScreen.storyboard in Resources */,
-				F837AD1428F538D5009FF9F9 /* sampleVideo.mp4 in Resources */,
 				F837AD0E28F47AF2009FF9F9 /* GoogleService-Info.plist in Resources */,
 				6321038128F06E7300CC1609 /* Assets.xcassets in Resources */,
 				6321037F28F06E7200CC1609 /* Main.storyboard in Resources */,
