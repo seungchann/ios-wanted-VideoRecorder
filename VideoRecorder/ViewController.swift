@@ -10,24 +10,62 @@ import FirebaseStorage
 import Photos
 import AVFoundation
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
+    
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        print("didFinishRecordingTo", outputFileURL)
+    }
+    
+    func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
+        print("didStartRecordingTo", fileURL)
+    }
 
     let storage = FirebaseStorageManager.shared
     let captureSession = AVCaptureSession()
-        
+    var videoOutput: AVCaptureMovieFileOutput!
+    
+    let recordButton: UIButton = {
+        let view = UIButton()
+        view.setTitle("녹화", for: .normal)
+        view.backgroundColor = .red
+        return view
+    }()
+    
+    let stopButton: UIButton = {
+        let view = UIButton()
+        view.setTitle("중지", for: .normal)
+        view.backgroundColor = .blue
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+            case .authorized: // The user has previously granted access to the camera.
+                self.testCapture()
+            case .notDetermined: // The user has not yet been asked for camera access.
+                AVCaptureDevice.requestAccess(for: .video) { granted in
+                    if granted {
+                        self.testCapture()
+                    }
+                }
+            
+            case .denied: // The user has previously denied access.
+                return
+
+            case .restricted: // The user can't grant access due to restrictions.
+                return
+        }
         
+        
+    }
+    
+    func testCapture() {
         captureSession.sessionPreset = .high
         
-//        guard let videoDevice = AVCaptureDevice.default(.camera, for: .video, position: .back) else {
-//            print("not found Capture Device")
-//            return
-//        }
-        
         let videoDevice = bestDevice(in: .back)
-        
+
         do {
             captureSession.beginConfiguration() // 1
 
@@ -61,7 +99,43 @@ class ViewController: UIViewController {
         previewLayer.videoGravity = .resizeAspectFill
         previewLayer.backgroundColor = UIColor.gray.cgColor
         self.view.layer.addSublayer(previewLayer)
+        let stackView = UIStackView()
+        stackView.spacing = 10
+        stackView.addArrangedSubview(recordButton)
+        stackView.addArrangedSubview(stopButton)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stackView)
+        stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        recordButton.addTarget(nil, action: #selector(start), for: .touchUpInside)
+        stopButton.addTarget(nil, action: #selector(stop), for: .touchUpInside)
+        
         captureSession.startRunning()
+    }
+    
+    @objc func start() {
+        startRecording()
+    }
+    
+    @objc func stop() {
+        stopRecording()
+    }
+    
+    // Recording Methods
+    private func startRecording() {
+//        let outputURL = URL(string: "")   // 파일이 저장될 경로
+        guard let docsUrl = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        let dirUrl = docsUrl.appendingPathComponent("videos")
+        let saveUrl = dirUrl.appendingPathComponent("MyFileSaveName.mp4")
+        
+        videoOutput.startRecording(to: saveUrl, recordingDelegate: self)
+    }
+      
+    private func stopRecording() {
+        if videoOutput.isRecording {
+            videoOutput.stopRecording()
+        }
     }
     
     func bestDevice(in position: AVCaptureDevice.Position) -> AVCaptureDevice {
