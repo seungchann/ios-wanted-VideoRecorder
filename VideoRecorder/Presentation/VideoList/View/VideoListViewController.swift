@@ -2,12 +2,17 @@
 //  ViewController.swift
 //  VideoRecorder
 //
-//  Created by kjs on 2022/10/07.
+//  Created by channy on 2022/10/11.
 //
 
 import UIKit
 
-class VideoViewController: UIViewController {
+struct MockUpVideo: VideoListViewModelProtocol {
+    var items: Observable<[VideoListItemViewModelProtocol]> = Observable([])
+}
+
+class VideoListViewController: UIViewController {
+    let viewModel: VideoListViewModel = VideoListViewModel(videoItems: MockUpVideo())
     
     // Properties
     let titleLabel: UILabel = {
@@ -37,6 +42,12 @@ class VideoViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    var videoListView: UITableView = {
+        let view = UITableView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,12 +55,13 @@ class VideoViewController: UIViewController {
         // Do any additional setup after loading the view.
         setupViews()
         setupConstraints()
+        configureView()
     }
 }
 
-extension VideoViewController {
+extension VideoListViewController {
     func setupViews() {
-        let views = [menuButton, titleLabel, cameraButton]
+        let views = [menuButton, titleLabel, cameraButton, videoListView]
         views.forEach { self.view.addSubview($0) }
     }
     
@@ -72,5 +84,32 @@ extension VideoViewController {
             cameraButton.heightAnchor.constraint(equalToConstant: 20),
             cameraButton.widthAnchor.constraint(equalTo: cameraButton.heightAnchor, multiplier: 1.5),
         ])
+        
+        NSLayoutConstraint.activate([
+            videoListView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            videoListView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            videoListView.topAnchor.constraint(equalTo: menuButton.bottomAnchor, constant: 30),
+            videoListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+        ])
+    }
+    
+    func configureView() {
+        videoListView.delegate = self
+        videoListView.dataSource = self
+        videoListView.register(VideoListViewCell.self, forCellReuseIdentifier: VideoListViewCell.identifier)
+    }
+}
+
+extension VideoListViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: VideoListViewCell.identifier, for: indexPath) as? VideoListViewCell else {
+            return UITableViewCell()
+        }
+        
+        return cell
     }
 }
