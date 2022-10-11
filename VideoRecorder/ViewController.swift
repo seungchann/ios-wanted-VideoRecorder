@@ -83,7 +83,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             }
 
             // 4
-            let videoOutput = AVCaptureMovieFileOutput()
+            videoOutput = AVCaptureMovieFileOutput()
             if captureSession.canAddOutput(videoOutput) {
                 captureSession.addOutput(videoOutput)
             }
@@ -111,7 +111,10 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         recordButton.addTarget(nil, action: #selector(start), for: .touchUpInside)
         stopButton.addTarget(nil, action: #selector(stop), for: .touchUpInside)
         
-        captureSession.startRunning()
+        
+        DispatchQueue.global().async {
+            self.captureSession.startRunning()
+        }
     }
     
     @objc func start() {
@@ -125,8 +128,18 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     // Recording Methods
     private func startRecording() {
 //        let outputURL = URL(string: "")   // 파일이 저장될 경로
-        guard let docsUrl = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        guard let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
         let dirUrl = docsUrl.appendingPathComponent("videos")
+        
+        var isDir: ObjCBool = true
+        if !FileManager.default.fileExists(atPath: "\(dirUrl)", isDirectory: &isDir) {
+            do {
+                try FileManager.default.createDirectory(at: dirUrl, withIntermediateDirectories: true)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        
         let saveUrl = dirUrl.appendingPathComponent("MyFileSaveName.mp4")
         
         videoOutput.startRecording(to: saveUrl, recordingDelegate: self)

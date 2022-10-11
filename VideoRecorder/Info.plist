@@ -4,7 +4,7 @@
 <dict>
 	<key>NSMicrophoneUsageDescription</key>
 	<string></string>
-	<key>NSCalendarsUsageDescription</key>
+	<key>NSCameraUsageDescription</key>
 	<string></string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
