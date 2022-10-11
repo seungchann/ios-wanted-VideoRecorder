@@ -10,16 +10,8 @@ import FirebaseStorage
 import Photos
 import AVFoundation
 
-class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
+class ViewController: UIViewController {
     
-    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        print("didFinishRecordingTo", outputFileURL)
-    }
-    
-    func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
-        print("didStartRecordingTo", fileURL)
-    }
-
     let storage = FirebaseStorageManager.shared
     let captureSession = AVCaptureSession()
     var videoOutput: AVCaptureMovieFileOutput!
@@ -43,11 +35,11 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
         switch AVCaptureDevice.authorizationStatus(for: .video) {
             case .authorized: // The user has previously granted access to the camera.
-                self.testCapture()
+                self.setupSession()
             case .notDetermined: // The user has not yet been asked for camera access.
                 AVCaptureDevice.requestAccess(for: .video) { granted in
                     if granted {
-                        self.testCapture()
+                        self.setupSession()
                     }
                 }
             
@@ -57,42 +49,9 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             case .restricted: // The user can't grant access due to restrictions.
                 return
         }
-        
-        
     }
     
-    func testCapture() {
-        captureSession.sessionPreset = .high
-        
-        let videoDevice = bestDevice(in: .back)
-
-        do {
-            captureSession.beginConfiguration() // 1
-
-            // 2
-            let videoInput = try AVCaptureDeviceInput(device: videoDevice)
-            if captureSession.canAddInput(videoInput) {
-                captureSession.addInput(videoInput)
-            }
-
-            // 3
-            let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)!
-            let audioInput = try AVCaptureDeviceInput(device: audioDevice)
-            if captureSession.canAddInput(audioInput) {
-                captureSession.addInput(audioInput)
-            }
-
-            // 4
-            videoOutput = AVCaptureMovieFileOutput()
-            if captureSession.canAddOutput(videoOutput) {
-                captureSession.addOutput(videoOutput)
-            }
-
-            captureSession.commitConfiguration() // 5
-        } catch let error as NSError {
-            NSLog("\(error), \(error.localizedDescription)")
-        }
-        
+    func setupView() {
         var previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
         previewLayer.position = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY)
@@ -111,10 +70,101 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         recordButton.addTarget(nil, action: #selector(start), for: .touchUpInside)
         stopButton.addTarget(nil, action: #selector(stop), for: .touchUpInside)
         
-        
         DispatchQueue.global().async {
             self.captureSession.startRunning()
         }
+    }
+    
+    func setupSession() {
+//        captureSession.sessionPreset = .high
+//
+//        let videoDevice = bestDevice(in: .back)
+//
+//        do {
+//            captureSession.beginConfiguration() // 1
+//
+//            // 2
+//            let videoInput = try AVCaptureDeviceInput(device: videoDevice)
+//            if captureSession.canAddInput(videoInput) {
+//                captureSession.addInput(videoInput)
+//            }
+//
+//            // 3
+//            let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)!
+//            let audioInput = try AVCaptureDeviceInput(device: audioDevice)
+//            if captureSession.canAddInput(audioInput) {
+//                captureSession.addInput(audioInput)
+//            }
+//
+//            // 4
+//            videoOutput = AVCaptureMovieFileOutput()
+//            if captureSession.canAddOutput(videoOutput) {
+//                captureSession.addOutput(videoOutput)
+//            }
+//
+//            captureSession.commitConfiguration() // 5
+//        } catch let error as NSError {
+//            NSLog("\(error), \(error.localizedDescription)")
+//        }
+        
+//        setupView()
+        
+        createMedia()
+    }
+    
+    func createMedia() {
+        guard let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        let dirUrl = docsUrl.appendingPathComponent("videos")
+        
+        var isDir: ObjCBool = true
+        if !FileManager.default.fileExists(atPath: "\(dirUrl)", isDirectory: &isDir) {
+            do {
+                try FileManager.default.createDirectory(at: dirUrl, withIntermediateDirectories: true)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        
+        guard let path = Bundle.main.path(forResource: "sampleVideo", ofType: "mp4") else {
+            print("not found")
+            return
+        }
+        
+        // save to local
+        let url = try? URL(fileURLWithPath: path)
+        let data = try? Data(contentsOf: url!)
+        FileManager.default.createFile(atPath: path, contents: data)
+        
+        
+        ThumbnailMaker.shared.generateThumnailAsync(url: url!, startOffsets: [1,10]) { image in
+            DispatchQueue.main.async {
+                let imageView = UIImageView()
+                imageView.image = image
+                imageView.translatesAutoresizingMaskIntoConstraints = false
+            
+                self.view.addSubview(imageView)
+                imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+                imageView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+                imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+                imageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+            }
+        }
+        
+//        guard let path = Bundle.main.path(forResource: "Food", ofType: "json") else {
+//            print("not found")
+//            return
+//        }
+//        
+//        guard let jsonString = try? String(contentsOfFile: path) else {
+//            return
+//        }
+        
+        let param = [
+            "name": "sampleVideo",
+            "type": "mp4",
+            "data": data
+        ] as [String : Any]
+//        storage.upload(param)
     }
     
     @objc func start() {
@@ -127,7 +177,6 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     // Recording Methods
     private func startRecording() {
-//        let outputURL = URL(string: "")   // 파일이 저장될 경로
         guard let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
         let dirUrl = docsUrl.appendingPathComponent("videos")
         
@@ -171,19 +220,14 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
 
         return devices.first(where: { device in device.position == position })!
     }
-    
-    @IBAction func uploadButtonPressed(_ sender: Any) {
-        storage.upload()
-    }
-    
-    @IBAction func fetchButtonPressed(_ sender: Any) {
-        storage.fetch { isFetched in
-            print(isFetched)
-        }
-    }
-    
-    @IBAction func backupButtonPressed(_ sender: Any) {
-        storage.backup()
-    }
 }
 
+extension ViewController: AVCaptureFileOutputRecordingDelegate {
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        print("didFinishRecordingTo", outputFileURL)
+    }
+    
+    func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
+        print("didStartRecordingTo", fileURL)
+    }
+}
