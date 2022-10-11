@@ -85,25 +85,26 @@ class FirebaseStorageManager {
     }
     
     func backup() {
-        let app = UIApplication.shared
-        var taskId: UIBackgroundTaskIdentifier = .invalid
-        taskId = app.beginBackgroundTask(withName: "upload_background_task") {
-            print("start BGTask")
-            
-//            self.upload { isUploaded in
-//                app.endBackgroundTask(taskId)
-//                taskId = .invalid
-//                print("end task")
+        
+//        DispatchQueue.global().asyncAfter(deadline: .now() + 5) {
+//            print("Task Resume")
+//            Task {
+//                guard let metadata = try? await self.upload() else { return }
+//                print(metadata)
+//                print("Task Complete")
 //            }
-            
-            Task {
-                guard let metadata = try? await self.upload() else { return }
-                print(metadata)
-                print("end BGTask")
+//        }
+        
+        BGTaskManager.shared.beginBackgroundTask(withName: "media_backup") { identifier in
+            DispatchQueue.global().asyncAfter(deadline: .now() + 10) {
+                print("Task Resume")
+                Task {
+                    guard let metadata = try? await self.upload() else { return }
+                    print(metadata)
+//                    identifier.endBackgroundTask()
+                    print("Task Complete")
+                }
             }
-            
-            app.endBackgroundTask(taskId)
-            taskId = .invalid
         }
     }
 }
