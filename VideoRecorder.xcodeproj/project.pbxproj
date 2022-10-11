@@ -111,9 +111,17 @@
 		64BC35D728F545C900819A2D /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				64BC35E228F560F000819A2D /* Protocols */,
 				64BC35D828F545DE00819A2D /* Observable.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		64BC35E228F560F000819A2D /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

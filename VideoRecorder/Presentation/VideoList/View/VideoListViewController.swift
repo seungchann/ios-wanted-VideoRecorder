@@ -7,12 +7,12 @@
 
 import UIKit
 
-struct MockUpVideo: VideoListViewModelProtocol {
+struct MockUpVideoViewModel: VideoListViewModelProtocol {
     var items: Observable<[VideoListItemViewModelProtocol]> = Observable([])
 }
 
 class VideoListViewController: UIViewController {
-    let viewModel: VideoListViewModel = VideoListViewModel(videoItems: MockUpVideo())
+    var viewModel: VideoListViewModelProtocol
     
     // Properties
     let titleLabel: UILabel = {
@@ -48,6 +48,15 @@ class VideoListViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    init(viewModel: VideoListViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
