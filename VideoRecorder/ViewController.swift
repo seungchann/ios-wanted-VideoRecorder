@@ -6,14 +6,31 @@
 //
 
 import UIKit
+import FirebaseStorage
+import Photos
+import AVFoundation
 
 class ViewController: UIViewController {
 
+    let storage = FirebaseStorageManager.shared
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
     }
-
-
+    
+    @IBAction func uploadButtonPressed(_ sender: Any) {
+        storage.upload()
+    }
+    
+    @IBAction func fetchButtonPressed(_ sender: Any) {
+        storage.fetch { isFetched in
+            print(isFetched)
+        }
+    }
+    
+    @IBAction func backupButtonPressed(_ sender: Any) {
+        storage.backup()
+    }
 }
 
