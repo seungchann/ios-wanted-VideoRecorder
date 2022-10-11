@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -17,30 +18,54 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="NAf-qj-7IN">
-                                <rect key="frame" x="155" y="364.66666666666669" width="80.333333333333314" height="115"/>
+                                <rect key="frame" x="138.66666666666666" y="304" width="112.66666666666666" height="236"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sdb-cu-OBD">
-                                        <rect key="frame" x="0.0" y="0.0" width="80.333333333333329" height="34.333333333333336"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="112.66666666666667" height="34.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="upload"/>
                                         <connections>
-                                            <action selector="uploadButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0YN-IE-VaD"/>
+                                            <action selector="upload:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pwK-aM-48E"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bJv-lC-WRd">
-                                        <rect key="frame" x="0.0" y="40.333333333333314" width="80.333333333333329" height="34.333333333333343"/>
+                                        <rect key="frame" x="0.0" y="40.333333333333314" width="112.66666666666667" height="34.333333333333343"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="fetch"/>
                                         <connections>
-                                            <action selector="fetchButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bU9-09-TeA"/>
+                                            <action selector="fetch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="k4G-1o-H6c"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ceU-jB-dSD">
-                                        <rect key="frame" x="0.0" y="80.666666666666629" width="80.333333333333329" height="34.333333333333343"/>
+                                        <rect key="frame" x="0.0" y="80.666666666666686" width="112.66666666666667" height="34.333333333333343"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="uploadInBG"/>
+                                        <connections>
+                                            <action selector="uploadInBG:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5J1-8h-Zd4"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f1Z-Ct-50r">
+                                        <rect key="frame" x="0.0" y="120.99999999999999" width="112.66666666666667" height="34.333333333333329"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="fetchInBG"/>
+                                        <connections>
+                                            <action selector="fetchInBG:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XWT-i0-Ibe"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aog-rn-cWz">
+                                        <rect key="frame" x="0.0" y="161.33333333333331" width="112.66666666666667" height="34.333333333333343"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="backup"/>
                                         <connections>
-                                            <action selector="backupButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="at8-B1-mQC"/>
+                                            <action selector="backup:" destination="BYZ-38-t0r" eventType="touchUpInside" id="owc-fM-rl0"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Isn-nk-VQT">
+                                        <rect key="frame" x="0.0" y="201.66666666666669" width="112.66666666666667" height="34.333333333333343"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="etc"/>
+                                        <connections>
+                                            <action selector="remain:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sXo-UD-NpA"/>
                                         </connections>
                                     </button>
                                 </subviews>

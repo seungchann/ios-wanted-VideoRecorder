@@ -19,18 +19,33 @@ class ViewController: UIViewController {
         
     }
     
-    @IBAction func uploadButtonPressed(_ sender: Any) {
-        storage.upload()
+    @IBAction func upload(_ sender: Any) {
+        Task {
+            guard let metadata = try? await self.storage.upload() else { return }
+            print(metadata)
+        }
     }
     
-    @IBAction func fetchButtonPressed(_ sender: Any) {
+    @IBAction func fetch(_ sender: Any) {
         storage.fetch { isFetched in
             print(isFetched)
         }
     }
     
-    @IBAction func backupButtonPressed(_ sender: Any) {
+    @IBAction func uploadInBG(_ sender: Any) {
+        storage.uploadInBG()
+    }
+    
+    @IBAction func fetchInBG(_ sender: Any) {
+        storage.fetchInBG()
+    }
+    
+    @IBAction func backup(_ sender: Any) {
         storage.backup()
+    }
+    
+    @IBAction func remain(_ sender: Any) {
+        
     }
 }
 

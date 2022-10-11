@@ -26,11 +26,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func backgroundTaskRegister() {
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: "backup", using: .global(qos: .background)) { task in
-            FirebaseStorageManager.shared.fetch { isFetched in
-                print("in background task!")
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: "upload", using: .global(qos: .background)) { task in
+            print("uploading...")
+            self.upload { isUploaded in
+                print("uploaded!")
+                task.setTaskCompleted(success: isUploaded)
+            }
+        }
+        
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: "fetch", using: .global(qos: .background)) { task in
+            print("feching...")
+            self.fetch { isFetched in
+                print("fetched!")
                 task.setTaskCompleted(success: isFetched)
             }
+        }
+    }
+    
+    func upload(_ completion: @escaping (Bool) -> Void) {
+        FirebaseStorageManager.shared.upload { isUploaded in
+            completion(isUploaded)
+        }
+    }
+    
+    func fetch(_ completion: @escaping (Bool) -> Void) {
+        FirebaseStorageManager.shared.fetch { isFetched in
+            completion(isFetched)
         }
     }
 
