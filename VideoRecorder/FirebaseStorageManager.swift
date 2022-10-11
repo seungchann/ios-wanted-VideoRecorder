@@ -40,10 +40,8 @@ class FirebaseStorageManager {
     }
     
     func backup() {
-        
         let scheduler = BGTaskScheduler.shared
-        let request = BGProcessingTaskRequest(identifier: "yh.backup")
-            request.earliestBeginDate = Date(timeIntervalSinceNow: 1)
+        let request = BGProcessingTaskRequest(identifier: "backup")
             request.requiresExternalPower = true
             request.requiresNetworkConnectivity = true
         do {

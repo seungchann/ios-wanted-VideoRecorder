@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseCore
+import BackgroundTasks
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,8 +20,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
+        backgroundTaskRegister()
         
         return true
+    }
+    
+    func backgroundTaskRegister() {
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: "backup", using: .global(qos: .background)) { task in
+            FirebaseStorageManager.shared.fetch { isFetched in
+                print("in background task!")
+                task.setTaskCompleted(success: isFetched)
+            }
+        }
     }
 
     // MARK: UISceneSession Lifecycle
