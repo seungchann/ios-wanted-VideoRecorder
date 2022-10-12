@@ -7,17 +7,9 @@
 
 import UIKit
 
-// MARK: - Test
-struct MockUpVideoItems: VideoListItemViewModelProtocol {
-    var title: String = "Test"
-    var duration: String = "1:00"
-    var releaseDate: String = "2022.10.11"
-    var thumbnailImagePath: String? = ""
-}
-
 class VideoListViewCell: UITableViewCell {
     static let identifier = "videoListViewCell"
-    private var viewModel: VideoListItemViewModel
+    private var viewModel: VideoListItemViewModel?
     
     let thumbnailView: UIImageView = {
         let view = UIImageView()
@@ -32,7 +24,6 @@ class VideoListViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         // MARK: - Test
-        label.text = "Test"
         label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         return label
     }()
@@ -41,10 +32,8 @@ class VideoListViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         // MARK: - Test
-        label.text = "2022-09-04"
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
-        
     }()
     
     override func awakeFromNib() {
@@ -58,13 +47,14 @@ class VideoListViewCell: UITableViewCell {
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        // 테스트용
-        let videos: VideoListItemViewModelProtocol = MockUpVideoItems()
-        self.viewModel = VideoListItemViewModel(video: videos)
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+    
+    func fill(viewModel: VideoListItemViewModel) {
+        self.viewModel = viewModel
         setupViews()
         setupConstraints()
-//        bind()
+        bind()
     }
     
     required init?(coder: NSCoder) {
@@ -96,5 +86,17 @@ extension VideoListViewCell {
             releaseDateLabel.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
             releaseDateLabel.topAnchor.constraint(equalTo: self.thumbnailView.centerYAnchor, constant: 10)
         ])
+    }
+    
+    func bind() {
+        viewModel?.title.subscribe { [weak self] titleString in
+            guard let self = self else { return }
+            self.titleLabel.text = titleString
+        }
+        
+        viewModel?.releaseDate.subscribe { [weak self] dateString in
+            guard let self = self else { return }
+            self.releaseDateLabel.text = dateString
+        }
     }
 }

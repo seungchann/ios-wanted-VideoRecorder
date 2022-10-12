@@ -7,13 +7,8 @@
 
 import UIKit
 
-// MARK: - Test
-struct MockUpVideoViewModel: VideoListViewModelProtocol {
-    var items: Observable<[VideoListItemViewModelProtocol]> = Observable([])
-}
-
 class VideoListViewController: UIViewController {
-    var viewModel: VideoListViewModelProtocol
+    var viewModel: VideoListViewModel
     
     // Properties
     let titleLabel: UILabel = {
@@ -50,7 +45,7 @@ class VideoListViewController: UIViewController {
         return view
     }()
     
-    init(viewModel: VideoListViewModelProtocol) {
+    init(viewModel: VideoListViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -112,13 +107,15 @@ extension VideoListViewController {
 
 extension VideoListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return self.viewModel.items.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: VideoListViewCell.identifier, for: indexPath) as? VideoListViewCell else {
             return UITableViewCell()
         }
+        
+        cell.fill(viewModel: self.viewModel.items[indexPath.row])
         
         return cell
     }

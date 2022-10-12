@@ -7,18 +7,14 @@
 
 import Foundation
 
-protocol VideoListViewModelProtocol {
-    var items: Observable<[VideoListItemViewModelProtocol]> { get }
-}
-
-class VideoListViewModel: VideoListViewModelProtocol {
+class VideoListViewModel {
     // Input
     
     
     // Output
-    var items: Observable<[VideoListItemViewModelProtocol]> = Observable([])
+    var items: [VideoListItemViewModel]
     
-    init(videoItems: VideoListViewModelProtocol) {
-        self.items = videoItems.items
+    init(videoItems: [VideoListItemViewModel]) {
+        self.items = videoItems
     }
 }

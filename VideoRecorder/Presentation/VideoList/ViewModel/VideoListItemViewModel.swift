@@ -7,23 +7,22 @@
 
 import UIKit
 
-protocol VideoListItemViewModelProtocol {
-    var title: String { get }
-    var duration: String { get }
-    var releaseDate: String { get }
-    var thumbnailImagePath: String? { get }
-}
-
-class VideoListItemViewModel: VideoListItemViewModelProtocol {
-    var title: String
-    var duration: String
-    var releaseDate: String
-    var thumbnailImagePath: String?
+class VideoListItemViewModel {
+    var title: Observable<String>
+    var duration: Observable<String>
+    var releaseDate: Observable<String>
+    var thumbnailImagePath: Observable<String?>
     
-    init(video: VideoListItemViewModelProtocol) {
-        self.title = video.title
-        self.duration = video.duration
-        self.releaseDate = video.releaseDate
-        self.thumbnailImagePath = video.thumbnailImagePath ?? ""
+    init(video: Video) {
+        self.title = Observable(video.title)
+        self.duration = Observable(video.duration)
+        self.releaseDate = Observable(dateFormatter.string(from: video.releaseDate))
+        self.thumbnailImagePath = Observable(video.thumbnailPath)
     }
 }
+
+private let dateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateStyle = .medium
+    return formatter
+}()
