@@ -5,7 +5,8 @@
 //  Created by 유영훈 on 2022/10/12.
 //
 
-import Foundation
+import AVFoundation
+import UIKit
 
 class ThumbnailMaker {
     
