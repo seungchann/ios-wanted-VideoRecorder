@@ -91,12 +91,18 @@ extension VideoListViewCell {
     func bind() {
         viewModel?.title.subscribe { [weak self] titleString in
             guard let self = self else { return }
-            self.titleLabel.text = titleString
+            DispatchQueue.main.async {
+                self.titleLabel.text = titleString
+            }
         }
         
         viewModel?.releaseDate.subscribe { [weak self] dateString in
             guard let self = self else { return }
-            self.releaseDateLabel.text = dateString
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            DispatchQueue.main.async {
+                self.releaseDateLabel.text = formatter.string(from: dateString)
+            }
         }
     }
 }

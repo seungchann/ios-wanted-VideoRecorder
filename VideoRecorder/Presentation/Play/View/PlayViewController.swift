@@ -6,13 +6,12 @@
 //
 
 import UIKit
+import AVKit
 
-class PlayViewController: UIViewController {
-    var viewModel: VideoListItemViewModel
+class PlayViewController: AVPlayerViewController {
+    var viewModel: PlayVideoItemViewModel
     
-    // Properties
-    
-    init(viewModel: VideoListItemViewModel) {
+    init(viewModel: PlayVideoItemViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -23,31 +22,24 @@ class PlayViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .blue
-        // Do any additional setup after loading the view.
-        setupViews()
-        setupConstraints()
+        self.view.backgroundColor = .white
+        self.player = self.viewModel.loadVideo()
+        self.player?.play()
         configureView()
         bind()
     }
 }
 
 extension PlayViewController {
-    func setupViews() {
-       
-    }
-    
-    func setupConstraints() {
-        
-    }
-    
     func configureView() {
         setNavigationbar()
     }
     
     func bind() {
         self.viewModel.title.subscribe { [weak self] titleString in
-            self?.navigationItem.title = titleString
+            DispatchQueue.main.async {
+                self?.navigationItem.title = titleString
+            }
         }
     }
 }
