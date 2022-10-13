@@ -3,10 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
-	<array>
-		<string>fetch</string>
-		<string>upload</string>
-	</array>
+	<array/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string></string>
 	<key>NSCameraUsageDescription</key>

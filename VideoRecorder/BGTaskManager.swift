@@ -17,7 +17,6 @@ class BGTaskManager {
     func beginBackgroundTask(withName: String? = nil, _ completion: @escaping (UIBackgroundTaskIdentifier) -> Void) {
         var backgroundTaskIdentifier = UIBackgroundTaskIdentifier.invalid
         backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(withName: withName) { [weak self] in
-            print("END")
             self?.endBackgroundTask(identifier: backgroundTaskIdentifier)
         }
         self.backgroundTaskIdentifiers.append(backgroundTaskIdentifier)
