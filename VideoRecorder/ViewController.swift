@@ -42,7 +42,7 @@ class ViewController: UIViewController {
                         self.setupSession()
                     }
                 }
-            
+
             case .denied: // The user has previously denied access.
                 return
 
@@ -50,30 +50,8 @@ class ViewController: UIViewController {
                 return
         }
     }
-    
-    @IBAction func upload(_ sender: Any) {
-        Task {
-            guard let metadata = try? await self.storage.upload() else { return }
-            print(metadata)
-        }
     }
     
-    @IBAction func fetch(_ sender: Any) {
-        storage.fetch { isFetched in
-            print(isFetched)
-        }
-    }
-    
-    @IBAction func uploadInBG(_ sender: Any) {
-        storage.uploadInBG()
-    }
-    
-    @IBAction func fetchInBG(_ sender: Any) {
-        storage.fetchInBG()
-    }
-    
-    @IBAction func backup(_ sender: Any) {
-        storage.backup()
     }
     
     func setupView() {
@@ -101,95 +79,37 @@ class ViewController: UIViewController {
     }
     
     func setupSession() {
-//        captureSession.sessionPreset = .high
-//
-//        let videoDevice = bestDevice(in: .back)
-//
-//        do {
-//            captureSession.beginConfiguration() // 1
-//
-//            // 2
-//            let videoInput = try AVCaptureDeviceInput(device: videoDevice)
-//            if captureSession.canAddInput(videoInput) {
-//                captureSession.addInput(videoInput)
-//            }
-//
-//            // 3
-//            let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)!
-//            let audioInput = try AVCaptureDeviceInput(device: audioDevice)
-//            if captureSession.canAddInput(audioInput) {
-//                captureSession.addInput(audioInput)
-//            }
-//
-//            // 4
-//            videoOutput = AVCaptureMovieFileOutput()
-//            if captureSession.canAddOutput(videoOutput) {
-//                captureSession.addOutput(videoOutput)
-//            }
-//
-//            captureSession.commitConfiguration() // 5
-//        } catch let error as NSError {
-//            NSLog("\(error), \(error.localizedDescription)")
-//        }
-        
-//        setupView()
-        
-        createMedia()
-    }
-    
-    func createMedia() {
-        guard let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-        let dirUrl = docsUrl.appendingPathComponent("videos")
-        
-        var isDir: ObjCBool = true
-        if !FileManager.default.fileExists(atPath: "\(dirUrl)", isDirectory: &isDir) {
-            do {
-                try FileManager.default.createDirectory(at: dirUrl, withIntermediateDirectories: true)
-            } catch {
-                print(error.localizedDescription)
+        captureSession.sessionPreset = .high
+
+        let videoDevice = bestDevice(in: .back)
+
+        do {
+            captureSession.beginConfiguration() // 1
+
+            // 2
+            let videoInput = try AVCaptureDeviceInput(device: videoDevice)
+            if captureSession.canAddInput(videoInput) {
+                captureSession.addInput(videoInput)
             }
-        }
-        
-        guard let path = Bundle.main.path(forResource: "sampleVideo", ofType: "mp4") else {
-            print("not found")
-            return
-        }
-        
-        // save to local
-        let url = try? URL(fileURLWithPath: path)
-        let data = try? Data(contentsOf: url!)
-        FileManager.default.createFile(atPath: path, contents: data)
-        
-        
-        ThumbnailMaker.shared.generateThumnailAsync(url: url!, startOffsets: [1,10]) { image in
-            DispatchQueue.main.async {
-                let imageView = UIImageView()
-                imageView.image = image
-                imageView.translatesAutoresizingMaskIntoConstraints = false
-            
-                self.view.addSubview(imageView)
-                imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-                imageView.heightAnchor.constraint(equalToConstant: 200).isActive = true
-                imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-                imageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+
+            // 3
+            let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)!
+            let audioInput = try AVCaptureDeviceInput(device: audioDevice)
+            if captureSession.canAddInput(audioInput) {
+                captureSession.addInput(audioInput)
             }
+
+            // 4
+            videoOutput = AVCaptureMovieFileOutput()
+            if captureSession.canAddOutput(videoOutput) {
+                captureSession.addOutput(videoOutput)
+            }
+
+            captureSession.commitConfiguration() // 5
+            setupView()
+        } catch let error as NSError {
+            NSLog("\(error), \(error.localizedDescription)")
         }
-        
-//        guard let path = Bundle.main.path(forResource: "Food", ofType: "json") else {
-//            print("not found")
-//            return
-//        }
-//        
-//        guard let jsonString = try? String(contentsOfFile: path) else {
-//            return
-//        }
-        
-        let param = [
-            "name": "sampleVideo",
-            "type": "mp4",
-            "data": data
-        ] as [String : Any]
-//        storage.upload(param)
     }
     
     @objc func start() {
@@ -202,20 +122,11 @@ class ViewController: UIViewController {
     
     // Recording Methods
     private func startRecording() {
-        guard let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-        let dirUrl = docsUrl.appendingPathComponent("videos")
         
-        var isDir: ObjCBool = true
-        if !FileManager.default.fileExists(atPath: "\(dirUrl)", isDirectory: &isDir) {
-            do {
-                try FileManager.default.createDirectory(at: dirUrl, withIntermediateDirectories: true)
-            } catch {
-                print(error.localizedDescription)
-            }
+        guard let (dirUrl, _) = MediaFileManager.shared.createUrl() else {
+            return
         }
-        
-        let saveUrl = dirUrl.appendingPathComponent("MyFileSaveName.mp4")
-        
+        let saveUrl = dirUrl.appendingPathComponent("\(UUID()).mp4")
         videoOutput.startRecording(to: saveUrl, recordingDelegate: self)
     }
       
@@ -245,15 +156,47 @@ class ViewController: UIViewController {
 
         return devices.first(where: { device in device.position == position })!
     }
-    
-    @IBAction func remain(_ sender: Any) {
-        
-    }
 }
 
 extension ViewController: AVCaptureFileOutputRecordingDelegate {
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         print("didFinishRecordingTo", outputFileURL)
+        
+        let nowDate = Date(timeInterval: 32400, since: Date())
+        let duration = String(Int(output.recordedDuration.seconds))
+        
+        self.askForTextAndConfirmWithAlert(title: "알림", placeholder: "영상의 제목을 입력해주세요") { filename in
+            
+            if let newUrl = MediaFileManager.shared.renameMedia(originURL: outputFileURL, newName: filename!) {
+                let filetype = "mp4"
+                do {
+                    let model = Video(title: filename!, releaseDate: nowDate, duration: duration, thumbnailPath: newUrl.absoluteString)
+                    try? MediaFileManager.shared.storeMediaInfo(infoModel: model)
+                } catch {
+                    print(error.localizedDescription)
+                }
+                
+//                ThumbnailMaker.shared.generateThumnailAsync(url: url!, startOffsets: [1,10]) { image in
+//                    DispatchQueue.main.async {
+//                        let imageView = UIImageView()
+//                        imageView.image = image
+//                        imageView.translatesAutoresizingMaskIntoConstraints = false
+//
+//                        self.view.addSubview(imageView)
+//                        imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+//                        imageView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+//                        imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+//                        imageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+//                    }
+//                }
+                
+                FirebaseStorageManager.shared.mediaBackup([
+                    "name": "\(filename!)_\(nowDate.debugDescription)",
+                    "type": filetype,
+                    "url": newUrl.absoluteString
+                ])
+            }
+        }
     }
     
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
