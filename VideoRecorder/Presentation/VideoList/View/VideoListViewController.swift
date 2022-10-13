@@ -147,4 +147,9 @@ extension VideoListViewController: UITableViewDelegate, UITableViewDataSource {
         
         return UISwipeActionsConfiguration(actions: [delete])
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let playVC = PlayViewController(viewModel: self.viewModel.items[indexPath.row])
+        self.navigationController?.pushViewController(playVC, animated: true)
+    }
 }

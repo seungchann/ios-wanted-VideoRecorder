@@ -7,7 +7,7 @@
 
 import UIKit
 
-class VideoListItemViewModel {
+struct VideoListItemViewModel {
     var title: Observable<String>
     var duration: Observable<String>
     var releaseDate: Observable<String>
