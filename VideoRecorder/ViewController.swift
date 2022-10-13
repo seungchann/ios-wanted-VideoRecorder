@@ -34,24 +34,21 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         switch AVCaptureDevice.authorizationStatus(for: .video) {
-            case .authorized: // The user has previously granted access to the camera.
-                self.setupSession()
-            case .notDetermined: // The user has not yet been asked for camera access.
-                AVCaptureDevice.requestAccess(for: .video) { granted in
-                    if granted {
-                        self.setupSession()
-                    }
+        case .authorized: // The user has previously granted access to the camera.
+            self.setupSession()
+        case .notDetermined: // The user has not yet been asked for camera access.
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                if granted {
+                    self.setupSession()
                 }
-
-            case .denied: // The user has previously denied access.
-                return
-
-            case .restricted: // The user can't grant access due to restrictions.
-                return
+            }
+            
+        case .denied: // The user has previously denied access.
+            return
+            
+        case .restricted: // The user can't grant access due to restrictions.
+            return
         }
-    }
-    }
-    
     }
     
     func setupView() {
@@ -80,31 +77,31 @@ class ViewController: UIViewController {
     
     func setupSession() {
         captureSession.sessionPreset = .high
-
+        
         let videoDevice = bestDevice(in: .back)
-
+        
         do {
             captureSession.beginConfiguration() // 1
-
+            
             // 2
             let videoInput = try AVCaptureDeviceInput(device: videoDevice)
             if captureSession.canAddInput(videoInput) {
                 captureSession.addInput(videoInput)
             }
-
+            
             // 3
             let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)!
             let audioInput = try AVCaptureDeviceInput(device: audioDevice)
             if captureSession.canAddInput(audioInput) {
                 captureSession.addInput(audioInput)
             }
-
+            
             // 4
             videoOutput = AVCaptureMovieFileOutput()
             if captureSession.canAddOutput(videoOutput) {
                 captureSession.addOutput(videoOutput)
             }
-
+            
             captureSession.commitConfiguration() // 5
             setupView()
         } catch let error as NSError {
@@ -129,7 +126,7 @@ class ViewController: UIViewController {
         let saveUrl = dirUrl.appendingPathComponent("\(UUID()).mp4")
         videoOutput.startRecording(to: saveUrl, recordingDelegate: self)
     }
-      
+    
     private func stopRecording() {
         if videoOutput.isRecording {
             videoOutput.stopRecording()
@@ -138,22 +135,22 @@ class ViewController: UIViewController {
     
     func bestDevice(in position: AVCaptureDevice.Position) -> AVCaptureDevice {
         var deviceTypes: [AVCaptureDevice.DeviceType]!
-
+        
         if #available(iOS 11.1, *) {
             deviceTypes = [.builtInTrueDepthCamera, .builtInDualCamera, .builtInWideAngleCamera]
         } else {
             deviceTypes = [.builtInDualCamera, .builtInWideAngleCamera]
         }
-
+        
         let discoverySession = AVCaptureDevice.DiscoverySession(
             deviceTypes: deviceTypes,
             mediaType: .video,
             position: .unspecified
         )
-
+        
         let devices = discoverySession.devices
         guard !devices.isEmpty else { fatalError("Missing capture devices.")}
-
+        
         return devices.first(where: { device in device.position == position })!
     }
 }
@@ -176,19 +173,19 @@ extension ViewController: AVCaptureFileOutputRecordingDelegate {
                     print(error.localizedDescription)
                 }
                 
-//                ThumbnailMaker.shared.generateThumnailAsync(url: url!, startOffsets: [1,10]) { image in
-//                    DispatchQueue.main.async {
-//                        let imageView = UIImageView()
-//                        imageView.image = image
-//                        imageView.translatesAutoresizingMaskIntoConstraints = false
-//
-//                        self.view.addSubview(imageView)
-//                        imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-//                        imageView.heightAnchor.constraint(equalToConstant: 200).isActive = true
-//                        imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-//                        imageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-//                    }
-//                }
+                //                ThumbnailMaker.shared.generateThumnailAsync(url: url!, startOffsets: [1,10]) { image in
+                //                    DispatchQueue.main.async {
+                //                        let imageView = UIImageView()
+                //                        imageView.image = image
+                //                        imageView.translatesAutoresizingMaskIntoConstraints = false
+                //
+                //                        self.view.addSubview(imageView)
+                //                        imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+                //                        imageView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+                //                        imageView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+                //                        imageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+                //                    }
+                //                }
                 
                 FirebaseStorageManager.shared.mediaBackup([
                     "name": "\(filename!)_\(nowDate.debugDescription)",
