@@ -190,7 +190,7 @@ extension ViewController: AVCaptureFileOutputRecordingDelegate {
                 FirebaseStorageManager.shared.mediaBackup([
                     "name": "\(filename!)_\(nowDate.debugDescription)",
                     "type": filetype,
-                    "url": newUrl.absoluteString
+                    "url": newUrl
                 ])
             }
         }

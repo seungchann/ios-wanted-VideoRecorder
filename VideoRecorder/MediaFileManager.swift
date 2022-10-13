@@ -74,8 +74,13 @@ class MediaFileManager {
         if let url = fm.urls(for: .documentDirectory, in: .userDomainMask).first {
             var dirUrl = url.appendingPathComponent("VideoRecorder")
             var fileUrl = dirUrl
-                fileUrl.appendPathComponent("Video")
-                fileUrl = fileUrl.appendingPathExtension("json")
+            do {
+                try fm.createDirectory(at: dirUrl, withIntermediateDirectories: true)
+            } catch {
+                print(error.localizedDescription)
+            }
+            fileUrl.appendPathComponent("Video")
+            fileUrl = fileUrl.appendingPathExtension("json")
             return (dirUrl, fileUrl)
         } else {
             print("not return URL")
