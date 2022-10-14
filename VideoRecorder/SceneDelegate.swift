@@ -30,7 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let videoData4 = VideoListItemViewModel(video: Video(title: "Concert.mp4", releaseDate: Date(), duration: "1:13:27", thumbnailPath: ""))
         let videoData5 = VideoListItemViewModel(video: Video(title: "Bridge.mp4", releaseDate: Date(), duration: "32:03", thumbnailPath: ""))
         
-        let testViewModel = VideoListViewModel(videoItems: [videoData1, videoData2, videoData3, videoData4, videoData5])
+        let testViewModel = VideoListViewModel(videoItems: [videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5])
         let mainViewController = VideoListViewController(viewModel: testViewModel)
         
         let navigationController = UINavigationController(rootViewController: mainViewController)

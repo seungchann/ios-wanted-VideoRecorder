@@ -24,6 +24,7 @@ class VideoListViewCell: UITableViewCell {
     
     func fill(viewModel: VideoListItemViewModel) {
         self.viewModel = viewModel
+        self.selectionStyle = .none
         
         setupViews()
         setupConstraints()
