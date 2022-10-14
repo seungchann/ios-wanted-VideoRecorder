@@ -13,6 +13,7 @@ class FirstRowView: UIView {
     let thumbnailView: UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
         view.contentMode = .scaleAspectFill
         // MARK: - Test
         view.backgroundColor = .blue
@@ -24,7 +25,6 @@ class FirstRowView: UIView {
         setupViews()
         setupConstraints()
         configureView()
-        bind()
     }
     
     required init?(coder: NSCoder) {
@@ -40,8 +40,8 @@ extension FirstRowView {
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            thumbnailView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.5),
-            thumbnailView.heightAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.5),
+            thumbnailView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.75),
+            thumbnailView.heightAnchor.constraint(equalTo: thumbnailView.widthAnchor, multiplier: 0.7),
             thumbnailView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             thumbnailView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
         ])
@@ -49,8 +49,5 @@ extension FirstRowView {
     
     func configureView() {
         self.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    func bind() {
     }
 }

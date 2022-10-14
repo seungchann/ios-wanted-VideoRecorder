@@ -20,3 +20,12 @@ class VideoListItemViewModel {
         self.thumbnailImagePath = Observable(video.thumbnailPath)
     }
 }
+
+extension VideoListItemViewModel {
+    func makeDateToString(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        return formatter.string(from: date)
+    }
+}

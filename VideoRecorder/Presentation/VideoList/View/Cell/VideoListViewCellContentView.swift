@@ -62,6 +62,16 @@ extension VideoListViewCellContentView {
         didReceiveViewModel = { [weak self] viewModel in
             guard let self = self else { return }
             self.viewModel = viewModel
+            
+            viewModel.title.subscribe { [weak self] titleString in
+                guard let self = self else { return }
+                self.secondRowView.titleLabel.text = titleString
+            }
+            
+            viewModel.releaseDate.subscribe { [weak self] date in
+                guard let self = self else { return }
+                self.secondRowView.releaseDateLabel.text = viewModel.makeDateToString(date: date)
+            }
         }
         
 //        ThumbnailMaker.shared.generateThumnailAsync(url: URL(string: self.viewModel?.thumbnailImagePath.value ?? "")!, startOffsets: [1, 10]) { [weak self] thumbnailImage in
