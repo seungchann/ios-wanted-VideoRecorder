@@ -20,9 +20,9 @@ class VideoListViewCellContentView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
-        configureView()
         setupViews()
         setupConstraints()
+        configureView()
         bind()
     }
     

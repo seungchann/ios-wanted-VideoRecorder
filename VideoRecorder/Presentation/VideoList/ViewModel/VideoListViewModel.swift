@@ -10,13 +10,23 @@ import Foundation
 class VideoListViewModel {
     // Input
     var didSelectDeleteAction: (Int) -> () = { indexPathRow in }
+    var didReceiveLoadAction: () -> () = { }
     
     // Output
+    var totalItems: [VideoListItemViewModel]
     var items: [VideoListItemViewModel]
     var propateDidSelectDeleteActionEvent: () -> () = { }
+    var propagateDidReceiveLoadActionEvent: () -> () = { }
+    
+    // Properties
+    var isPaging: Bool
+    var currentIndex: Int
     
     init(videoItems: [VideoListItemViewModel]) {
-        self.items = videoItems
+        self.isPaging = false
+        self.totalItems = videoItems
+        self.currentIndex = min(6, self.totalItems.count-1)
+        self.items = Array<VideoListItemViewModel>(self.totalItems[0...currentIndex])
         bind()
     }
     
@@ -27,14 +37,30 @@ class VideoListViewModel {
             self.removeData(item: item, index: indexPathRow)
             self.propateDidSelectDeleteActionEvent()
         }
+        
+        didReceiveLoadAction = { [weak self] in
+            guard let self = self else { return }
+            self.isPaging = true
+            self.currentIndex = min(self.currentIndex + 6, self.totalItems.count-1)
+            self.items = Array<VideoListItemViewModel>(self.totalItems[0...self.currentIndex])
+            self.propagateDidReceiveLoadActionEvent()
+        }
     }
 }
 
 extension VideoListViewModel {
     func removeData(item video : VideoListItemViewModel, index: Int) {
         Task {
-            // 로컬부터 파일삭제
+            // MARK: - 로컬부터 파일삭제
         }
         self.items.remove(at: index)
+    }
+    
+    func isScrollAvailable() -> Bool {
+        return !(self.totalItems.count-1 == self.currentIndex)
+    }
+    
+    func isEmptyTotalVideoItems() -> Bool {
+        return self.totalItems.isEmpty
     }
 }
