@@ -36,9 +36,9 @@ extension PlayViewController {
     }
     
     func bind() {
-        self.viewModel.title.subscribe { [weak self] titleString in
+        self.viewModel.title.subscribe { [weak self] title in
             DispatchQueue.main.async {
-                self?.navigationItem.title = titleString
+                self?.navigationItem.title = self?.viewModel.getStringFromTitle(title: title)
             }
         }
     }

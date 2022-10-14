@@ -40,6 +40,10 @@ extension PlayVideoItemViewModel {
         // 로컬 path 로 부터 mp4 영상 player 에 import
         return newUrl
     }
+    
+    func getStringFromTitle(title: String) -> String {
+        return title + ".mp4"
+    }
 }
 
 // MARK: - For Test
