@@ -23,11 +23,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         /* Test DATA 생성
         이후에 repository 와 연결해서 데이터 끌어와서 사용
         */
-        let videoData1 = VideoListItemViewModel(video: Video(title: "TEST1", releaseDate: Date(), duration: "01:00", thumbnailPath: ""))
-        let videoData2 = VideoListItemViewModel(video: Video(title: "TEST2", releaseDate: Date(), duration: "01:00", thumbnailPath: ""))
-        let videoData3 = VideoListItemViewModel(video: Video(title: "TEST3", releaseDate: Date(), duration: "01:00", thumbnailPath: ""))
         
-        let testViewModel = VideoListViewModel(videoItems: [videoData1, videoData2, videoData3])
+        let videoData1 = VideoListItemViewModel(video: Video(title: "Nature.mp4", releaseDate: Date(), duration: "03:21", thumbnailPath: ""))
+        let videoData2 = VideoListItemViewModel(video: Video(title: "Food.mp4", releaseDate: Date(), duration: "15:50", thumbnailPath: ""))
+        let videoData3 = VideoListItemViewModel(video: Video(title: "Building.mp4", releaseDate: Date(), duration: "0:21", thumbnailPath: ""))
+        let videoData4 = VideoListItemViewModel(video: Video(title: "Concert.mp4", releaseDate: Date(), duration: "1:13:27", thumbnailPath: ""))
+        let videoData5 = VideoListItemViewModel(video: Video(title: "Bridge.mp4", releaseDate: Date(), duration: "32:03", thumbnailPath: ""))
+        
+        let testViewModel = VideoListViewModel(videoItems: [videoData1, videoData2, videoData3, videoData4, videoData5])
         let mainViewController = VideoListViewController(viewModel: testViewModel)
         
         let navigationController = UINavigationController(rootViewController: mainViewController)

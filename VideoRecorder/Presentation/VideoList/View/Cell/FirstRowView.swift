@@ -20,6 +20,23 @@ class FirstRowView: UIView {
         return view
     }()
     
+    let durationBackgroundView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .black
+        view.alpha = 0.5
+        view.layer.cornerRadius = 5
+        return view
+    }()
+    
+    let durationLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 10, weight: .medium)
+        label.textColor = .white
+        return label
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: .zero)
         setupViews()
@@ -34,7 +51,7 @@ class FirstRowView: UIView {
 
 extension FirstRowView {
     func setupViews() {
-        let views = [thumbnailView]
+        let views = [thumbnailView, durationBackgroundView, durationLabel]
         views.forEach { self.addSubview($0) }
     }
     
@@ -44,6 +61,18 @@ extension FirstRowView {
             thumbnailView.heightAnchor.constraint(equalTo: thumbnailView.widthAnchor, multiplier: 0.7),
             thumbnailView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             thumbnailView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            durationBackgroundView.widthAnchor.constraint(equalTo: durationLabel.widthAnchor, multiplier: 1.2),
+            durationBackgroundView.heightAnchor.constraint(equalTo: durationBackgroundView.widthAnchor, multiplier: 0.5),
+            durationBackgroundView.leadingAnchor.constraint(equalTo: thumbnailView.leadingAnchor, constant: 5),
+            durationBackgroundView.bottomAnchor.constraint(equalTo: thumbnailView.bottomAnchor, constant: -5)
+        ])
+        
+        NSLayoutConstraint.activate([
+            durationLabel.centerYAnchor.constraint(equalTo: durationBackgroundView.centerYAnchor),
+            durationLabel.centerXAnchor.constraint(equalTo: durationBackgroundView.centerXAnchor),
         ])
     }
     

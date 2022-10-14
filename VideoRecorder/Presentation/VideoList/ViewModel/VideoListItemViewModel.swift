@@ -22,10 +22,19 @@ class VideoListItemViewModel {
 }
 
 extension VideoListItemViewModel {
-    func makeDateToString(date: Date) -> String {
+    func getStringFromDate(date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         
         return formatter.string(from: date)
+    }
+    
+    func getDurationWidthFromString(str: String) -> CGFloat {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 5, weight: .medium)
+        label.tintColor = .white
+        label.text = str
+        
+        return label.frame.width
     }
 }

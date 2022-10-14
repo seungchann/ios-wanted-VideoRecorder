@@ -41,7 +41,7 @@ extension VideoListViewCellContentView {
     func setupConstraints() {
         NSLayoutConstraint.activate([
             firstRowView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            firstRowView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.3),
+            firstRowView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.35),
             firstRowView.topAnchor.constraint(equalTo: self.topAnchor),
             firstRowView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
@@ -70,7 +70,12 @@ extension VideoListViewCellContentView {
             
             viewModel.releaseDate.subscribe { [weak self] date in
                 guard let self = self else { return }
-                self.secondRowView.releaseDateLabel.text = viewModel.makeDateToString(date: date)
+                self.secondRowView.releaseDateLabel.text = viewModel.getStringFromDate(date: date)
+            }
+            
+            viewModel.duration.subscribe { [weak self] durationString in
+                guard let self = self else { return }
+                self.firstRowView.durationLabel.text = durationString
             }
         }
         
