@@ -63,9 +63,9 @@ extension VideoListViewCellContentView {
             guard let self = self else { return }
             self.viewModel = viewModel
             
-            viewModel.title.subscribe { [weak self] titleString in
+            viewModel.title.subscribe { [weak self] title in
                 guard let self = self else { return }
-                self.secondRowView.titleLabel.text = titleString
+                self.secondRowView.titleLabel.text = viewModel.getStringFromTitle(title: title)
             }
             
             viewModel.releaseDate.subscribe { [weak self] date in

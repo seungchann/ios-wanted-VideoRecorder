@@ -59,4 +59,8 @@ extension VideoListItemViewModel {
         
         return label.frame.width
     }
+    
+    func getStringFromTitle(title: String) -> String {
+        return title + ".mp4"
+    }
 }
