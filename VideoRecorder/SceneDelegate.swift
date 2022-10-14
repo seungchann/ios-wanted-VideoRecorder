@@ -24,18 +24,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         이후에 repository 와 연결해서 데이터 끌어와서 사용
         */
         
-//        let videoData1 = VideoListItemViewModel(video: Video(title: "TEST1", releaseDate: Date(), duration: "01:00", thumbnailPath: ""))
-//        let videoData2 = VideoListItemViewModel(video: Video(title: "TEST2", releaseDate: Date(), duration: "01:00", thumbnailPath: ""))
-//        let videoData3 = VideoListItemViewModel(video: Video(title: "TEST3", releaseDate: Date(), duration: "01:00", thumbnailPath: ""))
-//
-//        let testViewModel = VideoListViewModel(videoItems: [videoData1, videoData2, videoData3])
-//
-//        let mainViewController = VideoListViewController(viewModel: testViewModel)
-//
-//        window?.rootViewController = mainViewController
-//        window?.makeKeyAndVisible()
-        
-        let mainViewController = RecordViewController()
+        let videoData1 = VideoListItemViewModel(video: Video(id: "id1", title: "TEST1", releaseDate: Date(), duration: "01:00", thumbnailPath: ""))
+        let videoData2 = VideoListItemViewModel(video: Video(id: "id2", title: "TEST2", releaseDate: Date(), duration: "01:00", thumbnailPath: ""))
+        let videoData3 = VideoListItemViewModel(video: Video(id: "id3", title: "TEST3", releaseDate: Date(), duration: "01:00", thumbnailPath: ""))
+
+        let testViewModel = VideoListViewModel(videoItems: [videoData1, videoData2, videoData3])
+
+        let mainViewController = VideoListViewController(viewModel: testViewModel)
+
         window?.rootViewController = mainViewController
         window?.makeKeyAndVisible()
     }

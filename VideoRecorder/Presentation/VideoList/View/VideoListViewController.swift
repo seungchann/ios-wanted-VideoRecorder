@@ -102,6 +102,7 @@ extension VideoListViewController {
         videoListView.delegate = self
         videoListView.dataSource = self
         videoListView.register(VideoListViewCell.self, forCellReuseIdentifier: VideoListViewCell.identifier)
+        cameraButton.addTarget(nil, action: #selector(showRecordVC), for: .touchUpInside)
     }
 }
 
@@ -122,5 +123,14 @@ extension VideoListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
+    }
+}
+
+extension VideoListViewController {
+    @objc func showRecordVC() {
+        let vc = RecordViewController()
+        vc.modalPresentationStyle = .fullScreen
+        vc.modalTransitionStyle = .coverVertical
+        self.present(vc, animated: true)
     }
 }
