@@ -79,8 +79,5 @@ class Observable<T> {
 
 ### Kuerong
 - 첫 번째 페이지 
-	- 4, 5 Section, PopupView
 - 두 번째 페이지
-	- 한글 조합
 - 세 번째 페이지
-	- 단축키 기능
