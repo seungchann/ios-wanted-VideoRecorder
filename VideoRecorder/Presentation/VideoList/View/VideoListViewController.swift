@@ -61,6 +61,7 @@ class VideoListViewController: UIViewController {
         setupViews()
         setupConstraints()
         configureView()
+        bind()
     }
 }
 
@@ -103,6 +104,18 @@ extension VideoListViewController {
         videoListView.dataSource = self
         videoListView.register(VideoListViewCell.self, forCellReuseIdentifier: VideoListViewCell.identifier)
     }
+    
+    func bind() {
+        viewModel.propateDidSelectDeleteActionEvent = { [weak self] in
+            self?.updateItems()
+        }
+    }
+}
+
+extension VideoListViewController {
+    func updateItems() {
+        videoListView.reloadData()
+    }
 }
 
 extension VideoListViewController: UITableViewDelegate, UITableViewDataSource {
@@ -122,5 +135,23 @@ extension VideoListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let delete = UIContextualAction(style: .destructive, title: "삭제") { [weak self] (action, UIView, completion: @escaping (Bool) -> Void) in
+            guard let self = self else { return }
+            self.viewModel.didSelectDeleteAction(indexPath.row)
+            completion(true)
+        }
+        
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let videoListItemVM = self.viewModel.items[indexPath.row]
+        let video = Video(title: videoListItemVM.title.value, releaseDate: videoListItemVM.releaseDate.value, duration: videoListItemVM.duration.value, thumbnailPath: videoListItemVM.thumbnailImagePath.value ?? "")
+        let playVC = PlayViewController(viewModel: PlayVideoItemViewModel(video: video))
+        self.navigationController?.pushViewController(playVC, animated: true)
     }
 }

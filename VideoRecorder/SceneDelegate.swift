@@ -29,10 +29,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let videoData3 = VideoListItemViewModel(video: Video(title: "TEST3", releaseDate: Date(), duration: "01:00", thumbnailPath: ""))
         
         let testViewModel = VideoListViewModel(videoItems: [videoData1, videoData2, videoData3])
-        
         let mainViewController = VideoListViewController(viewModel: testViewModel)
         
-        window?.rootViewController = mainViewController
+        let navigationController = UINavigationController(rootViewController: mainViewController)
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
 
