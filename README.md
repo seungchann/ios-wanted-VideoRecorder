@@ -77,10 +77,10 @@ class Observable<T> {
   - Model, View, ViewModel 간 관계 설계     
   - `url` 을 통해 영상을 불러와 재생할 수 있는 화면 구현  
 
-### Beeem
+### Kuerong
 - 첫 번째 페이지 
 	- 4, 5 Section, PopupView
 - 두 번째 페이지
 	- 한글 조합
-- 세 번째 화면
+- 세 번째 페이지
 	- 단축키 기능
