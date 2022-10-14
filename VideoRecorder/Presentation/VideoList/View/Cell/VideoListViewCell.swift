@@ -36,15 +36,7 @@ class VideoListViewCell: UITableViewCell {
         return label
     }()
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        // Configure the view for the selected state
-    }
+    var cellContentView = VideoListViewCellContentView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -52,6 +44,7 @@ class VideoListViewCell: UITableViewCell {
     
     func fill(viewModel: VideoListItemViewModel) {
         self.viewModel = viewModel
+        
         setupViews()
         setupConstraints()
         bind()
@@ -64,28 +57,36 @@ class VideoListViewCell: UITableViewCell {
 
 extension VideoListViewCell {
     func setupViews() {
-        let views = [thumbnailView, titleLabel, releaseDateLabel]
-        views.forEach { self.addSubview($0) }
+//        let views = [thumbnailView, titleLabel, releaseDateLabel]
+        let views = [cellContentView]
+        views.forEach { self.contentView.addSubview($0) }
     }
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            thumbnailView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 30),
-            thumbnailView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20),
-            thumbnailView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -20),
-            thumbnailView.widthAnchor.constraint(equalToConstant: 120),
-            thumbnailView.heightAnchor.constraint(equalToConstant: 80)
+            cellContentView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            cellContentView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            cellContentView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            cellContentView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
         
-        NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: self.thumbnailView.trailingAnchor, constant: 20),
-            titleLabel.bottomAnchor.constraint(equalTo: self.thumbnailView.centerYAnchor, constant: -10),
-        ])
-        
-        NSLayoutConstraint.activate([
-            releaseDateLabel.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
-            releaseDateLabel.topAnchor.constraint(equalTo: self.thumbnailView.centerYAnchor, constant: 10)
-        ])
+//        NSLayoutConstraint.activate([
+//            thumbnailView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 30),
+//            thumbnailView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20),
+//            thumbnailView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -20),
+//            thumbnailView.widthAnchor.constraint(equalToConstant: 120),
+//            thumbnailView.heightAnchor.constraint(equalToConstant: 80)
+//        ])
+//
+//        NSLayoutConstraint.activate([
+//            titleLabel.leadingAnchor.constraint(equalTo: self.thumbnailView.trailingAnchor, constant: 20),
+//            titleLabel.bottomAnchor.constraint(equalTo: self.thumbnailView.centerYAnchor, constant: -10),
+//        ])
+//
+//        NSLayoutConstraint.activate([
+//            releaseDateLabel.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
+//            releaseDateLabel.topAnchor.constraint(equalTo: self.thumbnailView.centerYAnchor, constant: 10)
+//        ])
     }
     
     func bind() {

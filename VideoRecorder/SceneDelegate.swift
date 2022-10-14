@@ -23,7 +23,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         /* Test DATA 생성
         이후에 repository 와 연결해서 데이터 끌어와서 사용
         */
-        
         let videoData1 = VideoListItemViewModel(video: Video(title: "TEST1", releaseDate: Date(), duration: "01:00", thumbnailPath: ""))
         let videoData2 = VideoListItemViewModel(video: Video(title: "TEST2", releaseDate: Date(), duration: "01:00", thumbnailPath: ""))
         let videoData3 = VideoListItemViewModel(video: Video(title: "TEST3", releaseDate: Date(), duration: "01:00", thumbnailPath: ""))

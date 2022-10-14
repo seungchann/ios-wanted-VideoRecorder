@@ -167,6 +167,7 @@ extension ViewController: AVCaptureFileOutputRecordingDelegate {
             if let newUrl = MediaFileManager.shared.renameMedia(originURL: outputFileURL, newName: filename!) {
                 let filetype = "mp4"
                 do {
+                    // MARK: - Orientation 수정 예정
                     let model = Video(title: filename!, releaseDate: nowDate, duration: duration, thumbnailPath: newUrl.absoluteString)
                     try? MediaFileManager.shared.storeMediaInfo(infoModel: model)
                 } catch {

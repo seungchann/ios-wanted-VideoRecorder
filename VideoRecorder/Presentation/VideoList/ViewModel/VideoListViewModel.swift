@@ -24,17 +24,17 @@ class VideoListViewModel {
         didSelectDeleteAction = { [weak self] indexPathRow in
             guard let self = self else { return }
             let item = self.items[indexPathRow]
-            self.removeData(item: item)
+            self.removeData(item: item, index: indexPathRow)
             self.propateDidSelectDeleteActionEvent()
         }
     }
 }
 
 extension VideoListViewModel {
-    func removeData(item video : VideoListItemViewModel) {
+    func removeData(item video : VideoListItemViewModel, index: Int) {
         Task {
             // 로컬부터 파일삭제
         }
-        self.items = self.items.filter { $0.title.value != video.title.value }
+        self.items.remove(at: index)
     }
 }
