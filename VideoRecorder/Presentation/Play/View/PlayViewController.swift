@@ -32,7 +32,7 @@ class PlayViewController: AVPlayerViewController {
 
 extension PlayViewController {
     func configureView() {
-        setNavigationbar()
+        setupNavigationbar()
     }
     
     func bind() {
@@ -45,7 +45,7 @@ extension PlayViewController {
 }
 
 extension PlayViewController {
-    func setNavigationbar() {
+    func setupNavigationbar() {
         if #available(iOS 15, *) {
             let barAppearance = UINavigationBarAppearance()
             barAppearance.backgroundColor = .white

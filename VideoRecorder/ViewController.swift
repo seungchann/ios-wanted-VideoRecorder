@@ -160,14 +160,15 @@ extension ViewController: AVCaptureFileOutputRecordingDelegate {
         print("didFinishRecordingTo", outputFileURL)
         
         let nowDate = Date(timeInterval: 32400, since: Date())
-        let duration = String(Int(output.recordedDuration.seconds))
+        let duration = Int(output.recordedDuration.seconds)
         
         self.askForTextAndConfirmWithAlert(title: "알림", placeholder: "영상의 제목을 입력해주세요") { filename in
             
             if let newUrl = MediaFileManager.shared.renameMedia(originURL: outputFileURL, newName: filename!) {
                 let filetype = "mp4"
                 do {
-                    let model = Video(title: filename!, releaseDate: nowDate, duration: duration, thumbnailPath: newUrl.absoluteString)
+                    // MARK: - id, duration 값 임의로 수정 (line 163)
+                    let model = Video(id: "", title: filename!, releaseDate: nowDate, duration: duration, thumbnailPath: newUrl.absoluteString)
                     try? MediaFileManager.shared.storeMediaInfo(infoModel: model)
                 } catch {
                     print(error.localizedDescription)

@@ -103,11 +103,21 @@ extension VideoListViewController {
         videoListView.delegate = self
         videoListView.dataSource = self
         videoListView.register(VideoListViewCell.self, forCellReuseIdentifier: VideoListViewCell.identifier)
+        videoListView.register(VideoListViewLoadingCell.self, forCellReuseIdentifier: VideoListViewLoadingCell.identifier)
     }
     
     func bind() {
         viewModel.propateDidSelectDeleteActionEvent = { [weak self] in
-            self?.updateItems()
+            DispatchQueue.main.async {
+                self?.updateItems()
+            }
+        }
+        
+        viewModel.propagateDidReceiveLoadActionEvent = { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                self?.updateItems()
+                self?.viewModel.isPaging = false
+            }
         }
     }
 }
@@ -119,22 +129,47 @@ extension VideoListViewController {
 }
 
 extension VideoListViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.items.count
+        if section == 0 {
+            return viewModel.items.count
+        } else if section == 1 && viewModel.isPaging && viewModel.isScrollAvailable() {
+            return 1
+        }
+        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: VideoListViewCell.identifier, for: indexPath) as? VideoListViewCell else {
-            return UITableViewCell()
+        if indexPath.section == 0 {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: VideoListViewCell.identifier, for: indexPath) as? VideoListViewCell else {
+                return UITableViewCell()
+            }
+            
+            cell.fill(viewModel: self.viewModel.items[indexPath.row])
+            
+            return cell
+        } else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: VideoListViewLoadingCell.identifier, for: indexPath) as? VideoListViewLoadingCell else {
+                return UITableViewCell()
+            }
+            
+            cell.cellContentView.activityIndicatorView.startAnimating()
+            
+            return cell
         }
         
-        cell.fill(viewModel: self.viewModel.items[indexPath.row])
-        
-        return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+        if indexPath.section == 0 {
+            return 100
+        } else {
+            return 60
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -150,8 +185,22 @@ extension VideoListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let videoListItemVM = self.viewModel.items[indexPath.row]
-        let video = Video(title: videoListItemVM.title.value, releaseDate: videoListItemVM.releaseDate.value, duration: videoListItemVM.duration.value, thumbnailPath: videoListItemVM.thumbnailImagePath.value ?? "")
+        let video = Video(id: videoListItemVM.id.value, title: videoListItemVM.title.value, releaseDate: videoListItemVM.releaseDate.value, duration: videoListItemVM.duration.value, thumbnailPath: videoListItemVM.thumbnailImagePath.value ?? "")
         let playVC = PlayViewController(viewModel: PlayVideoItemViewModel(video: video))
         self.navigationController?.pushViewController(playVC, animated: true)
+    }
+}
+
+extension VideoListViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let height = scrollView.frame.height
+        
+        if offsetY > (contentHeight - height) {
+            if !self.viewModel.isPaging && self.viewModel.isScrollAvailable() && !self.viewModel.isEmptyTotalVideoItems() {
+                self.viewModel.didReceiveLoadAction()
+            }
+        }
     }
 }
