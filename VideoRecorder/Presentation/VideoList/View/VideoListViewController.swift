@@ -150,7 +150,7 @@ extension VideoListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let videoListItemVM = self.viewModel.items[indexPath.row]
-        let video = Video(title: videoListItemVM.title.value, releaseDate: videoListItemVM.releaseDate.value, duration: videoListItemVM.duration.value, thumbnailPath: videoListItemVM.thumbnailImagePath.value ?? "")
+        let video = Video(id: videoListItemVM.id.value, title: videoListItemVM.title.value, releaseDate: videoListItemVM.releaseDate.value, duration: videoListItemVM.duration.value, thumbnailPath: videoListItemVM.thumbnailImagePath.value ?? "")
         let playVC = PlayViewController(viewModel: PlayVideoItemViewModel(video: video))
         self.navigationController?.pushViewController(playVC, animated: true)
     }

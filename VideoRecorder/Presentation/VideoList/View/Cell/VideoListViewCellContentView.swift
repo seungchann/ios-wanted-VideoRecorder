@@ -73,12 +73,13 @@ extension VideoListViewCellContentView {
                 self.secondRowView.releaseDateLabel.text = viewModel.getStringFromDate(date: date)
             }
             
-            viewModel.duration.subscribe { [weak self] durationString in
+            viewModel.duration.subscribe { [weak self] duration in
                 guard let self = self else { return }
-                self.firstRowView.durationLabel.text = durationString
+                self.firstRowView.durationLabel.text = viewModel.getStringFromDuration(duration: duration)
             }
         }
         
+        // MARK: - 썸네일 이미지 뷰에 썸네일 넣기
 //        ThumbnailMaker.shared.generateThumnailAsync(url: URL(string: self.viewModel?.thumbnailImagePath.value ?? "")!, startOffsets: [1, 10]) { [weak self] thumbnailImage in
 //            guard let self = self else { return }
 //            DispatchQueue.main.async {

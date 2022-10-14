@@ -65,7 +65,7 @@ extension FirstRowView {
         
         NSLayoutConstraint.activate([
             durationBackgroundView.widthAnchor.constraint(equalTo: durationLabel.widthAnchor, multiplier: 1.2),
-            durationBackgroundView.heightAnchor.constraint(equalTo: durationBackgroundView.widthAnchor, multiplier: 0.5),
+            durationBackgroundView.heightAnchor.constraint(equalTo: thumbnailView.heightAnchor, multiplier: 0.25),
             durationBackgroundView.leadingAnchor.constraint(equalTo: thumbnailView.leadingAnchor, constant: 5),
             durationBackgroundView.bottomAnchor.constraint(equalTo: thumbnailView.bottomAnchor, constant: -5)
         ])

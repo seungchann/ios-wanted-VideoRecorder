@@ -9,11 +9,13 @@ import UIKit
 import AVKit
 
 class PlayVideoItemViewModel {
+    var id: Observable<String>
     var title: Observable<String>
     var thumbnailImagePath: Observable<String?>
     var player: AVPlayer?
     
     init(video: Video) {
+        self.id = Observable(video.id)
         self.title = Observable(video.title)
         self.thumbnailImagePath = Observable(video.thumbnailPath)
     }
@@ -21,15 +23,24 @@ class PlayVideoItemViewModel {
 
 extension PlayVideoItemViewModel {
     func loadVideo() -> AVPlayer {
-        self.player = AVPlayer(url: makeTestURL())
+        self.player = AVPlayer(url: makeURL(id: self.id.value))
         // MARK: - 실제 URL 연결 필요
 //        self.player = AVPlayer(url: makeURL(path: self.thumbnailImagePath.value ?? ""))
         return self.player ?? AVPlayer()
     }
     
-    func makeURL(path: String) -> URL {
+    func makeURL(id: String) -> URL {
+        guard let (dirUrl, _) = MediaFileManager.shared.createUrl() else {
+            return URL(string: "")!
+        }
+
+        let newUrl = dirUrl.appendingPathComponent("\(id).mp4")
+        
+        print(newUrl)
+        print("!!!!!")
+        print(URL(string: "file://" + (self.thumbnailImagePath.value ?? ""))!)
         // 로컬 path 로 부터 mp4 영상 player 에 import
-        return URL(string: "")!
+        return newUrl
     }
 }
 
