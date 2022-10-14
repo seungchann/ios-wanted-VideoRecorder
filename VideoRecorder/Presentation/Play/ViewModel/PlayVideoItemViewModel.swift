@@ -24,8 +24,6 @@ class PlayVideoItemViewModel {
 extension PlayVideoItemViewModel {
     func loadVideo() -> AVPlayer {
         self.player = AVPlayer(url: makeURL(id: self.id.value))
-        // MARK: - 실제 URL 연결 필요
-//        self.player = AVPlayer(url: makeURL(path: self.thumbnailImagePath.value ?? ""))
         return self.player ?? AVPlayer()
     }
     
