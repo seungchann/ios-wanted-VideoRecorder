@@ -15,35 +15,40 @@ class FirebaseStorageManager {
         case noMetaData
     }
     
+    struct StorageParameter {
+        let id: String
+        let filename: String
+        let url: URL
+        
+        init(id: String, filename: String, url: URL) {
+            self.id = id
+            self.filename = filename
+            self.url = url
+        }
+    }
+    
     static let shared = FirebaseStorageManager()
     let storage = Storage.storage()
+    let FOLDER_NAME = "test" //"Videos"
+    let FILE_TYPE = "mp4"
+    
     private init() { }
     
-    func upload(_ param: [String:Any]) async throws -> StorageMetadata {
-        let foldername = "test"
-        let filename = "\(param["name"]!).\(param["type"]!)"
-        let storageRef = storage.reference(withPath: "\(foldername)/\(filename)")
-        let url = param["url"] as! URL
-        guard let metadata = try? await storageRef.putFileAsync(from: url) else { throw StorageError.noMetaData }
+    func upload(_ param: StorageParameter) async throws -> StorageMetadata {
+        let path = "\(FOLDER_NAME)/\(param.id).\(FILE_TYPE)"
+        let storageRef = storage.reference(withPath: path)
+        guard let metadata = try? await storageRef.putFileAsync(from: param.url) else { throw StorageError.noMetaData }
         return metadata
     }
     
-//    func fetch(_ completion: @escaping (Bool) -> Void){
-//        let storageRef = storage.reference(withPath: "test/")
-//
-//        let image = UIImage(systemName: "circle")?.pngData()
-//
-//        storageRef.child("test.png").downloadURL { result in
-//            print(result)
-//            completion(true)
-//        }
-//    }
+    func delete(_ id: String) async -> Bool {
+        let path = "\(FOLDER_NAME)/\(id).\(FILE_TYPE)"
+        let storageRef = storage.reference(withPath: path)
+        let result = try? await storageRef.delete()
+        return result != nil
+    }
     
-//    func delete() {
-//        let storageRef = storage.reference(forURL: "")
-//    }
-    
-    func mediaBackup(_ param: [String:Any]) {
+    func backup(_ param: StorageParameter) {
         BGTaskManager.shared.beginBackgroundTask(withName: "media_backup") { identifier in
             DispatchQueue.main.async { [weak self] in
                 print("Task Resume")
@@ -60,4 +65,15 @@ class FirebaseStorageManager {
             }
         }
     }
+    
+    //    private func fetch(_ completion: @escaping (Bool) -> Void){
+    //        let storageRef = storage.reference(withPath: "test/")
+    //
+    //        let image = UIImage(systemName: "circle")?.pngData()
+    //
+    //        storageRef.child("test.png").downloadURL { result in
+    //            print(result)
+    //            completion(true)
+    //        }
+    //    }
 }

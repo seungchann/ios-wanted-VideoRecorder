@@ -20,6 +20,7 @@
 		64C9FF7028F7D6FC00566C5F /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C9FF6E28F7D6FC00566C5F /* Observable.swift */; };
 		64C9FF7328F7D71C00566C5F /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C9FF7228F7D71C00566C5F /* Video.swift */; };
 		F80AE91228F6B3A40022274D /* MediaFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80AE91128F6B3A40022274D /* MediaFileManager.swift */; };
+		F818B64028F984330072109B /* RecordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F818B63F28F984330072109B /* RecordViewModel.swift */; };
 		F837AD0E28F47AF2009FF9F9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F837AD0D28F47AF2009FF9F9 /* GoogleService-Info.plist */; };
 		F837AD1028F513F9009FF9F9 /* FirebaseStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F837AD0F28F513F9009FF9F9 /* FirebaseStorageManager.swift */; };
 		F86E7CB128F5979500458937 /* BGTaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86E7CB028F5979500458937 /* BGTaskManager.swift */; };
@@ -45,6 +46,7 @@
 		64C9FF6E28F7D6FC00566C5F /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		64C9FF7228F7D71C00566C5F /* Video.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
 		F80AE91128F6B3A40022274D /* MediaFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFileManager.swift; sourceTree = "<group>"; };
+		F818B63F28F984330072109B /* RecordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewModel.swift; sourceTree = "<group>"; };
 		F837AD0D28F47AF2009FF9F9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F837AD0F28F513F9009FF9F9 /* FirebaseStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageManager.swift; sourceTree = "<group>"; };
 		F86E7CB028F5979500458937 /* BGTaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BGTaskManager.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				F88C7AB928F7AEAC00ACDDF2 /* UIViewController+extension.swift */,
 				64C9FF7128F7D71C00566C5F /* Domain */,
 				64C9FF6D28F7D6FC00566C5F /* Utils */,
+				F818B63F28F984330072109B /* RecordViewModel.swift */,
 			);
 			path = VideoRecorder;
 			sourceTree = "<group>";
@@ -334,6 +337,7 @@
 				F86E7CB528F5D8A000458937 /* ThumbnailMaker.swift in Sources */,
 				64C9FF6A28F7D6DB00566C5F /* VideoListViewModel.swift in Sources */,
 				F80AE91228F6B3A40022274D /* MediaFileManager.swift in Sources */,
+				F818B64028F984330072109B /* RecordViewModel.swift in Sources */,
 				64C9FF6B28F7D6DB00566C5F /* VideoListViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
