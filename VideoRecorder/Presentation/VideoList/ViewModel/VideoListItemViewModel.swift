@@ -51,15 +51,6 @@ extension VideoListItemViewModel {
         }
     }
     
-    func getDurationWidthFromString(str: String) -> CGFloat {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 5, weight: .medium)
-        label.tintColor = .white
-        label.text = str
-        
-        return label.frame.width
-    }
-    
     func getStringFromTitle(title: String) -> String {
         return title + ".mp4"
     }
