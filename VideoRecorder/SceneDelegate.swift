@@ -24,16 +24,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         이후에 repository 와 연결해서 데이터 끌어와서 사용
         */
         
-        let videoData1 = VideoListItemViewModel(video: Video(id: "AA7DE9BB-A894-4BB4-BFD9-45609180A898", title: "project", releaseDate: Date(), duration: 27, thumbnailPath: "/var/mobile/Containers/Data/Application/3A9AD567-451B-4DA3-B288-55C4345D2D0C/Documents/VideoRecorder/AA7DE9BB-A894-4BB4-BFD9-45609180A898.mp4"))
-        let videoData2 = VideoListItemViewModel(video: Video(id: "aa", title: "Food", releaseDate: Date(), duration: 60, thumbnailPath: ""))
-        let videoData3 = VideoListItemViewModel(video: Video(id: "bb", title: "Building", releaseDate: Date(), duration: 120, thumbnailPath: ""))
-        let videoData4 = VideoListItemViewModel(video: Video(id: "cc", title: "Concert", releaseDate: Date(), duration: 132, thumbnailPath: ""))
-        let videoData5 = VideoListItemViewModel(video: Video(id: "dd",title: "Bridge", releaseDate: Date(), duration: 3600, thumbnailPath: ""))
+//        let videoData1 = VideoListItemViewModel(video: Video(id: "AA7DE9BB-A894-4BB4-BFD9-45609180A898", title: "project", releaseDate: Date(), duration: 27, thumbnailPath: "/var/mobile/Containers/Data/Application/3A9AD567-451B-4DA3-B288-55C4345D2D0C/Documents/VideoRecorder/AA7DE9BB-A894-4BB4-BFD9-45609180A898.mp4"))
+//        let videoData2 = VideoListItemViewModel(video: Video(id: "aa", title: "Food", releaseDate: Date(), duration: 60, thumbnailPath: ""))
+//        let videoData3 = VideoListItemViewModel(video: Video(id: "bb", title: "Building", releaseDate: Date(), duration: 120, thumbnailPath: ""))
+//        let videoData4 = VideoListItemViewModel(video: Video(id: "cc", title: "Concert", releaseDate: Date(), duration: 132, thumbnailPath: ""))
+//        let videoData5 = VideoListItemViewModel(video: Video(id: "dd",title: "Bridge", releaseDate: Date(), duration: 3600, thumbnailPath: ""))
+//
+//        let testViewModel = VideoListViewModel(videoItems: [videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5,])
         
-        let testViewModel = VideoListViewModel(videoItems: [videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5,])
+        var videos = [VideoListItemViewModel]()
+        for video in MediaFileManager.shared.fetchJson() {
+            videos.append(VideoListItemViewModel(video: video))
+        }
+        let testViewModel = VideoListViewModel(videoItems: videos)
+        
         let mainViewController = VideoListViewController(viewModel: testViewModel)
         
         let navigationController = UINavigationController(rootViewController: mainViewController)
+        
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }

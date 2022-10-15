@@ -104,6 +104,7 @@ extension VideoListViewController {
         videoListView.dataSource = self
         videoListView.register(VideoListViewCell.self, forCellReuseIdentifier: VideoListViewCell.identifier)
         videoListView.register(VideoListViewLoadingCell.self, forCellReuseIdentifier: VideoListViewLoadingCell.identifier)
+        cameraButton.addTarget(nil, action: #selector(showRecordVC), for: .touchUpInside)
     }
     
     func bind() {
@@ -202,5 +203,14 @@ extension VideoListViewController: UIScrollViewDelegate {
                 self.viewModel.didReceiveLoadAction()
             }
         }
+    }
+}
+
+extension VideoListViewController {
+    @objc func showRecordVC() {
+        let vc = RecordViewController()
+        vc.modalPresentationStyle = .fullScreen
+        vc.modalTransitionStyle = .coverVertical
+        self.present(vc, animated: true)
     }
 }
