@@ -115,12 +115,6 @@ class RecordViewController: UIViewController {
         setupConstraints()
         configureView()
         
-        guard let (dirUrl, _) = MediaFileManager.shared.createUrl() else {
-            return
-        }
-        print(dirUrl.absoluteString)
-        print(dirUrl.relativePath)
-        
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized: // The user has previously granted access to the camera.
             self.viewModel.setupSession()
