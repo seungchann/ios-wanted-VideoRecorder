@@ -6,8 +6,6 @@
 //
 
 import UIKit
-import FirebaseStorage
-import Photos
 import AVFoundation
 
 class RecordViewController: UIViewController {
@@ -287,31 +285,6 @@ extension RecordViewController {
                 self.recordButton.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
             }
             swapCameraPositionButton.isEnabled = true
-        }
-    }
-}
-
-// MARK: TEST
-extension RecordViewController {
-    func finishRecording() {
-        MediaFileManager.shared.test_recording_finish_after_rename { param in
-            let nowDate = Date(timeInterval: 32400, since: Date())
-            let duration = 32
-            
-            self.askForTextAndConfirmWithAlert(title: "알림", placeholder: "영상의 제목을 입력해주세요") { [weak self]
-                filename in
-                guard let filename = filename else {
-                    MediaFileManager.shared.deleteMedia(filename!)
-                    return
-                }
-                guard let self = self else { return }
-                
-                let model = Video(id: param.id, title: filename, releaseDate: nowDate, duration: duration, thumbnailPath: param.url.absoluteString)
-                MediaFileManager.shared.storeMediaInfo(video: model)
-                
-                let param = FirebaseStorageManager.StorageParameter(id: param.id, filename: filename, url: param.url)
-                FirebaseStorageManager.shared.backup(param)
-            }
         }
     }
 }

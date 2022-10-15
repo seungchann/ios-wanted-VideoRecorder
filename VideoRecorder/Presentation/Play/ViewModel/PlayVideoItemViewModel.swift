@@ -45,18 +45,3 @@ extension PlayVideoItemViewModel {
         return title + ".mp4"
     }
 }
-
-// MARK: - For Test
-extension PlayVideoItemViewModel {
-    func makeTestURL() -> URL {
-        // 비디오 저장될 디렉토리 URL
-        guard let (dirUrl, _) = MediaFileManager.shared.createUrl() else {
-            return URL(string: "")!
-        }
-        // File 이름 추가
-        let newName = "test1"
-        let newUrl = dirUrl.appendingPathComponent("\(newName).mp4")
-        // using url
-        return newUrl
-    }
-}

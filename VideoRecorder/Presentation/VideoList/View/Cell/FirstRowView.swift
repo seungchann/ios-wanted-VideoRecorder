@@ -15,8 +15,7 @@ class FirstRowView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 10
         view.contentMode = .scaleAspectFill
-        // MARK: - Test
-        view.backgroundColor = .blue
+        view.backgroundColor = .lightGray
         return view
     }()
     
