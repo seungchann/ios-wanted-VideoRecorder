@@ -163,7 +163,7 @@ extension MediaFileManager {
             try? FileManager.default.copyItem(atPath: dummyUrl.relativePath, toPath: outputUrl.relativePath)
             
             // set filename & store
-            let video = Video(id: key, title: filename, releaseDate: date, duration: "21", thumbnailPath: outputUrl.relativePath)
+            let video = Video(id: key, title: filename, releaseDate: date, duration: 24, thumbnailPath: outputUrl.relativePath)
             
             try mm.storeMediaInfo(video: video)
             

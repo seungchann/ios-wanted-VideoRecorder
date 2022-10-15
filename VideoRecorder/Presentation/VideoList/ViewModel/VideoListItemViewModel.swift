@@ -9,7 +9,7 @@ import UIKit
 
 class VideoListItemViewModel {
     var title: Observable<String>
-    var duration: Observable<String>
+    var duration: Observable<Int>
     var releaseDate: Observable<String>
     var thumbnailImagePath: Observable<String?>
     

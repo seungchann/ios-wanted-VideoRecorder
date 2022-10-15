@@ -1,7 +1,4 @@
 //
-//  Video.swift
-//  VideoRecorder
-//
 //  Created by channy on 2022/10/12.
 //
 
@@ -11,8 +8,6 @@ struct Video: Codable {
     let id: String
     let title: String
     let releaseDate: Date
-    let duration: String
+    let duration: Int
     let thumbnailPath: String
 }
-
-

@@ -115,6 +115,12 @@ class RecordViewController: UIViewController {
         setupConstraints()
         configureView()
         
+        guard let (dirUrl, _) = MediaFileManager.shared.createUrl() else {
+            return
+        }
+        print(dirUrl.absoluteString)
+        print(dirUrl.relativePath)
+        
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized: // The user has previously granted access to the camera.
             self.viewModel.setupSession()
@@ -201,14 +207,14 @@ extension RecordViewController: AVCaptureFileOutputRecordingDelegate {
         print("didFinishRecordingTo", outputFileURL)
         
         let nowDate = Date(timeInterval: 32400, since: Date())
-        let duration = String(Int(output.recordedDuration.seconds))
+        let duration = Int(output.recordedDuration.seconds)
         let position = viewModel.captureSession.inputs.first?.ports.first?.sourceDevicePosition
         
         self.askForTextAndConfirmWithAlert(title: "알림", placeholder: "영상의 제목을 입력해주세요") { [weak self]
             filename in
             guard let self = self else { return }
 
-            let model = Video(id: self.uuid!.uuidString, title: filename!, releaseDate: nowDate, duration: duration, thumbnailPath: outputFileURL.relativePath)
+            let model = Video(id: self.uuid!.uuidString, title: filename!, releaseDate: nowDate, duration: duration, thumbnailPath: outputFileURL.absoluteString)
             MediaFileManager.shared.storeMediaInfo(video: model)
             
             let param = FirebaseStorageManager.StorageParameter(id: self.uuid!.uuidString, filename: filename!, url: outputFileURL)

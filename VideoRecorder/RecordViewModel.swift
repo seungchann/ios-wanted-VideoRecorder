@@ -8,8 +8,6 @@
 import UIKit
 import AVFoundation
 
-
-
 class RecordViewModel {
     
     let captureSession = AVCaptureSession()
