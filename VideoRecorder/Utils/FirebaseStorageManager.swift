@@ -29,7 +29,7 @@ class FirebaseStorageManager {
     
     static let shared = FirebaseStorageManager()
     let storage = Storage.storage()
-    let FOLDER_NAME = "test" //"Videos"
+    let FOLDER_NAME = "Videos"
     let FILE_TYPE = "mp4"
     
     private init() { }

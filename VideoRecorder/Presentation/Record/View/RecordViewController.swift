@@ -115,22 +115,24 @@ class RecordViewController: UIViewController {
         setupConstraints()
         configureView()
         
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized: // The user has previously granted access to the camera.
-            self.viewModel.setupSession()
-        case .notDetermined: // The user has not yet been asked for camera access.
-            AVCaptureDevice.requestAccess(for: .video) { granted in
-                if granted {
-                    self.viewModel.setupSession()
-                }
-            }
-
-        case .denied: // The user has previously denied access.
-            return
-
-        case .restricted: // The user can't grant access due to restrictions.
-            return
-        }
+//        MediaFileManager.shared.test_recording_finish_after_rename()
+        print(MediaFileManager.shared.numberOfVideos)
+//        switch AVCaptureDevice.authorizationStatus(for: .video) {
+//        case .authorized: // The user has previously granted access to the camera.
+//            self.viewModel.setupSession()
+//        case .notDetermined: // The user has not yet been asked for camera access.
+//            AVCaptureDevice.requestAccess(for: .video) { granted in
+//                if granted {
+//                    self.viewModel.setupSession()
+//                }
+//            }
+//
+//        case .denied: // The user has previously denied access.
+//            return
+//
+//        case .restricted: // The user can't grant access due to restrictions.
+//            return
+//        }
     }
     
     deinit {
@@ -213,7 +215,6 @@ extension RecordViewController: AVCaptureFileOutputRecordingDelegate {
             
             let param = FirebaseStorageManager.StorageParameter(id: self.uuid!.uuidString, filename: filename!, url: outputFileURL)
             FirebaseStorageManager.shared.backup(param)
-            
         }
     }
     

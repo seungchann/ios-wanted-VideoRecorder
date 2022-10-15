@@ -77,6 +77,9 @@ extension RecordViewModel {
         return devices.first(where: { device in device.position == position })!
     }
     
+    
+    // MARK: FIX ME
+    // 2번째 스왑시 에러
     func swapCameraPosition() {
         guard let input = captureSession.inputs.first else {
             print("No video input.")

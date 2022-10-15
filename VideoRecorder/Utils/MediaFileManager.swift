@@ -149,8 +149,9 @@ extension MediaFileManager {
         let key = UUID().uuidString
         let filename = "newVideo"
         let filetype = "mp4"
-        guard let (dirUrl, _) = mm.createUrl() else { return }
         
+        guard let (dirUrl, _) = mm.createUrl() else { return }
+        print(dirUrl)
         do {
             // recording finish
             var docPath = ""
@@ -163,7 +164,7 @@ extension MediaFileManager {
             try? FileManager.default.copyItem(atPath: dummyUrl.relativePath, toPath: outputUrl.relativePath)
             
             // set filename & store
-            let video = Video(id: key, title: filename, releaseDate: date, duration: 24, thumbnailPath: outputUrl.relativePath)
+            let video = Video(id: key, title: filename, releaseDate: date, duration: 24, thumbnailPath: outputUrl.absoluteString)
             
             try mm.storeMediaInfo(video: video)
             
