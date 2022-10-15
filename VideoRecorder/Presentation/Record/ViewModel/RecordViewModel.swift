@@ -77,20 +77,13 @@ extension RecordViewModel {
         return devices.first(where: { device in device.position == position })!
     }
     
-    
-    // MARK: FIX ME
-    // 2번째 스왑시 에러
     func swapCameraPosition() {
-        guard let input = captureSession.inputs.first else {
-            print("No video input.")
-            return
-        }
-        let position = input.ports.first!.sourceDevicePosition
+        let position = captureSession.inputs.first?.ports.first?.sourceDevicePosition
         let videoDevice = bestDevice(in: position == .back ? .front : .back)
         do {
             let videoInput = try AVCaptureDeviceInput(device: videoDevice)
             captureSession.beginConfiguration()
-            if !captureSession.canAddInput(videoInput) {
+            for input in captureSession.inputs {
                 captureSession.removeInput(input)
             }
             captureSession.addInput(videoInput)
