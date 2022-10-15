@@ -78,5 +78,17 @@ extension FirstRowView {
     
     func configureView() {
         self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = UIColor(named: "backgroundColorAsset")
+    }
+}
+
+extension UIImageView {
+    func masking() {
+        self.layer.cornerRadius = 10
+        self.layer.masksToBounds = true
+        let path = UIBezierPath(rect: self.bounds)
+        let maskingLayer = CAShapeLayer()
+        maskingLayer.path = path.cgPath
+        self.layer.mask = maskingLayer
     }
 }

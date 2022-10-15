@@ -63,6 +63,16 @@ extension VideoListViewCellContentView {
             guard let self = self else { return }
             self.viewModel = viewModel
             
+            viewModel.id.subscribe { [weak self] id in
+                ThumbnailMaker.shared.generateThumnailAsync(filename: id, startOffsets: [1, 10]) { [weak self] thumbnailImage in
+                    guard let self = self else { return }
+                    DispatchQueue.main.async {
+                        self.firstRowView.thumbnailView.image = thumbnailImage
+                        self.firstRowView.thumbnailView.masking()
+                    }
+                }
+            }
+            
             viewModel.title.subscribe { [weak self] title in
                 guard let self = self else { return }
                 self.secondRowView.titleLabel.text = viewModel.getStringFromTitle(title: title)
@@ -78,13 +88,5 @@ extension VideoListViewCellContentView {
                 self.firstRowView.durationLabel.text = viewModel.getStringFromDuration(duration: duration)
             }
         }
-        
-        // MARK: - 썸네일 이미지 뷰에 썸네일 넣기
-//        ThumbnailMaker.shared.generateThumnailAsync(url: URL(string: self.viewModel?.thumbnailImagePath.value ?? "")!, startOffsets: [1, 10]) { [weak self] thumbnailImage in
-//            guard let self = self else { return }
-//            DispatchQueue.main.async {
-//                self.firstRowView.thumbnailView.image = thumbnailImage
-//            }
-//        }
     }
 }
