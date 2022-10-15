@@ -25,9 +25,13 @@ class ThumbnailMaker {
         return imageGenerator
     }
     
-    func generateThumnailAsync(url: URL, startOffsets: [Double],
+    func generateThumnailAsync(filename: String, startOffsets: [Double],
                                completion: @escaping (UIImage) -> Void) {
-        let asset = AVAsset(url: url)
+        
+        guard let (dirUrl, _) = MediaFileManager.shared.createUrl() else { return }
+        let fileUrl = dirUrl.appendingPathComponent(filename, conformingTo: .mpeg4Movie)
+        
+        let asset = AVAsset(url: fileUrl)
         let imageGenerator = self.imageGenerator(asset: asset)
 
         let time: [NSValue] = startOffsets.compactMap {

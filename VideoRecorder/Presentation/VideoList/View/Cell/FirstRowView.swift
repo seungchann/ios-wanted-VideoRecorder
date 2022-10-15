@@ -15,8 +15,7 @@ class FirstRowView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 10
         view.contentMode = .scaleAspectFill
-        // MARK: - Test
-        view.backgroundColor = .blue
+        view.backgroundColor = .lightGray
         return view
     }()
     
@@ -78,5 +77,17 @@ extension FirstRowView {
     
     func configureView() {
         self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = UIColor(named: "backgroundColorAsset")
+    }
+}
+
+extension UIImageView {
+    func masking() {
+        self.layer.cornerRadius = 10
+        self.layer.masksToBounds = true
+        let path = UIBezierPath(rect: self.bounds)
+        let maskingLayer = CAShapeLayer()
+        maskingLayer.path = path.cgPath
+        self.layer.mask = maskingLayer
     }
 }

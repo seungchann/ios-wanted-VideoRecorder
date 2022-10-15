@@ -33,13 +33,13 @@ extension VideoListItemViewModel {
     
     func getStringFromDuration(duration: Int) -> String {
         if duration < 60 {
-            return "00:" + String(duration)
+            return "00:" + String(format: "%02d", duration)
         } else if duration < 3600 {
             let min = String(Int(Double(duration/60)))
             var sec = String(duration%60)
             // 0 ~ 9초 일 경우
             sec = (sec.count == 1) ? ("0" + sec) : sec
-            return "\(min):\(sec)"
+            return String(format: "%02d:%02d", [min, sec])
         } else {
             let hour = String(Int(Double(duration/3600)))
             let remaining = duration%3600
@@ -47,7 +47,7 @@ extension VideoListItemViewModel {
             min = (min.count == 1) ? ("0"+min) : min
             var sec = String(remaining%60)
             sec = (sec.count == 1) ? ("0"+sec) : sec
-            return "\(hour):\(min):\(sec)"
+            return String(format: "%02d:%02d:%02d", [hour, min, sec])
         }
     }
     

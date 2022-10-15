@@ -38,6 +38,7 @@ extension UIViewController {
         alertController.addAction(okAction)
 
         alertController.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { _ in
+            okHandler(nil)
             objc_setAssociatedObject(self, &textHandlerKey, nil, .OBJC_ASSOCIATION_RETAIN)
         }))
 

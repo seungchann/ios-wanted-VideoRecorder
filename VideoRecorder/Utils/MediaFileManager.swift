@@ -59,14 +59,31 @@ class MediaFileManager {
         putJson(url: fileUrl, originData: data, newModel: video)
     }
     
-    func fetchJson() -> [Video] {
+//    func fetchJson() -> [Video] {
+//        guard let (_, fileUrl) = createUrl() else { return [] }
+//        guard let data = try? Data(contentsOf: fileUrl) else { return [] }
+//
+//        do {
+//            let decoder = JSONDecoder()
+//            let jsonArray = try decoder.decode([Video].self, from: data)
+//            return jsonArray
+//        } catch {
+//            print(error.localizedDescription)
+//            return []
+//        }
+//    }
+    
+    func fetchJson() -> [VideoListItemViewModel] {
         guard let (_, fileUrl) = createUrl() else { return [] }
         guard let data = try? Data(contentsOf: fileUrl) else { return [] }
-        
+        var videoListItemViewModels = [VideoListItemViewModel]()
         do {
             let decoder = JSONDecoder()
             let jsonArray = try decoder.decode([Video].self, from: data)
-            return jsonArray
+            for video in jsonArray {
+                videoListItemViewModels.append(VideoListItemViewModel(video: video))
+            }
+            return videoListItemViewModels
         } catch {
             print(error.localizedDescription)
             return []
@@ -82,6 +99,7 @@ class MediaFileManager {
                 json.append(new)
             let data = try! JSONEncoder().encode(json)
             try data.write(to: fileUrl, options: [.atomic])
+            NotificationCenter.default.post(name: Notification.Name("mediaInfo_updated"), object: nil)
         } catch {
             print(error.localizedDescription)
         }
@@ -134,45 +152,6 @@ class MediaFileManager {
         } else {
             print("No return url.")
             return nil
-        }
-    }
-}
-
-extension MediaFileManager {
-    
-    // MARK: TEST FUNC
-    /// recording finish 상황 videoOutput 발생 및 저장 & 백업
-    func test_recording_finish_after_rename() {
-        
-        let mm = MediaFileManager.shared
-        let date = Date()
-        let key = UUID().uuidString
-        let filename = "newVideo"
-        let filetype = "mp4"
-        
-        guard let (dirUrl, _) = mm.createUrl() else { return }
-        print(dirUrl)
-        do {
-            // recording finish
-            var docPath = ""
-            for i in 1..<dirUrl.pathComponents.count-1 {
-                docPath += "/" + dirUrl.pathComponents[i]
-            }
-            let docUrl = URL(string: docPath)!
-            let dummyUrl = docUrl.appendingPathComponent("sampleVideo.mp4")
-            let outputUrl = dirUrl.appendingPathComponent("\(key).mp4")
-            try? FileManager.default.copyItem(atPath: dummyUrl.relativePath, toPath: outputUrl.relativePath)
-            
-            // set filename & store
-            let video = Video(id: key, title: filename, releaseDate: date, duration: 24, thumbnailPath: outputUrl.absoluteString)
-            
-            try mm.storeMediaInfo(video: video)
-            
-            let param = FirebaseStorageManager.StorageParameter(id: key, filename: filename, url: outputUrl)
-            FirebaseStorageManager.shared.backup(param)
-            
-        } catch {
-            print(error.localizedDescription)
         }
     }
 }

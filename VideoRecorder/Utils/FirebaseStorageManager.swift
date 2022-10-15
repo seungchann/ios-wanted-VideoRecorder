@@ -65,15 +65,4 @@ class FirebaseStorageManager {
             }
         }
     }
-    
-    //    private func fetch(_ completion: @escaping (Bool) -> Void){
-    //        let storageRef = storage.reference(withPath: "test/")
-    //
-    //        let image = UIImage(systemName: "circle")?.pngData()
-    //
-    //        storageRef.child("test.png").downloadURL { result in
-    //            print(result)
-    //            completion(true)
-    //        }
-    //    }
 }

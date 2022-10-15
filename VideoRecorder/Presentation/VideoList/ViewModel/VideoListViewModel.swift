@@ -26,7 +26,7 @@ class VideoListViewModel {
         self.isPaging = false
         self.totalItems = videoItems
         self.currentIndex = min(6, self.totalItems.count-1)
-        self.items = Array<VideoListItemViewModel>(self.totalItems[0...currentIndex])
+        self.items = !self.totalItems.isEmpty ? Array<VideoListItemViewModel>(self.totalItems[0...currentIndex]) : Array<VideoListItemViewModel>()
         bind()
     }
     
@@ -42,7 +42,7 @@ class VideoListViewModel {
             guard let self = self else { return }
             self.isPaging = true
             self.currentIndex = min(self.currentIndex + 6, self.totalItems.count-1)
-            self.items = Array<VideoListItemViewModel>(self.totalItems[0...self.currentIndex])
+            self.items = !self.totalItems.isEmpty ? Array<VideoListItemViewModel>(self.totalItems[0...self.currentIndex]) : Array<VideoListItemViewModel>()
             self.propagateDidReceiveLoadActionEvent()
         }
     }
@@ -52,6 +52,9 @@ extension VideoListViewModel {
     func removeData(item video : VideoListItemViewModel, index: Int) {
         Task {
             // MARK: - 로컬부터 파일삭제
+            if await FirebaseStorageManager.shared.delete(video.id.value) {
+                MediaFileManager.shared.deleteMedia(video.id.value)
+            }
         }
         self.items.remove(at: index)
     }

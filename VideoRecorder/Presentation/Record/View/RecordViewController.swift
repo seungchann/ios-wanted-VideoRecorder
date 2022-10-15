@@ -6,8 +6,6 @@
 //
 
 import UIKit
-import FirebaseStorage
-import Photos
 import AVFoundation
 
 class RecordViewController: UIViewController {
@@ -115,24 +113,22 @@ class RecordViewController: UIViewController {
         setupConstraints()
         configureView()
         
-//        MediaFileManager.shared.test_recording_finish_after_rename()
-        print(MediaFileManager.shared.numberOfVideos)
-//        switch AVCaptureDevice.authorizationStatus(for: .video) {
-//        case .authorized: // The user has previously granted access to the camera.
-//            self.viewModel.setupSession()
-//        case .notDetermined: // The user has not yet been asked for camera access.
-//            AVCaptureDevice.requestAccess(for: .video) { granted in
-//                if granted {
-//                    self.viewModel.setupSession()
-//                }
-//            }
-//
-//        case .denied: // The user has previously denied access.
-//            return
-//
-//        case .restricted: // The user can't grant access due to restrictions.
-//            return
-//        }
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized: // The user has previously granted access to the camera.
+            self.viewModel.setupSession()
+        case .notDetermined: // The user has not yet been asked for camera access.
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                if granted {
+                    self.viewModel.setupSession()
+                }
+            }
+
+        case .denied: // The user has previously denied access.
+            return
+
+        case .restricted: // The user can't grant access due to restrictions.
+            return
+        }
     }
     
     deinit {
@@ -208,12 +204,18 @@ extension RecordViewController: AVCaptureFileOutputRecordingDelegate {
         
         self.askForTextAndConfirmWithAlert(title: "알림", placeholder: "영상의 제목을 입력해주세요") { [weak self]
             filename in
+            
             guard let self = self else { return }
-
-            let model = Video(id: self.uuid!.uuidString, title: filename!, releaseDate: nowDate, duration: duration, thumbnailPath: outputFileURL.absoluteString)
+            
+            guard let filename = filename else {
+                MediaFileManager.shared.deleteMedia(self.uuid!.uuidString)
+                return
+            }
+            
+            let model = Video(id: self.uuid!.uuidString, title: filename, releaseDate: nowDate, duration: duration, thumbnailPath: outputFileURL.absoluteString)
             MediaFileManager.shared.storeMediaInfo(video: model)
             
-            let param = FirebaseStorageManager.StorageParameter(id: self.uuid!.uuidString, filename: filename!, url: outputFileURL)
+            let param = FirebaseStorageManager.StorageParameter(id: self.uuid!.uuidString, filename: filename, url: outputFileURL)
             FirebaseStorageManager.shared.backup(param)
         }
     }
@@ -244,7 +246,11 @@ extension RecordViewController {
     
     // Recording Methods
     @objc func startRecording() {
-        
+//        guard let videoOutput = viewModel.videoOutput else {
+//            print("No video Output")
+//            finishRecording()
+//            return
+//        }
         if viewModel.videoOutput.isRecording {
             stopRecording()
             return
