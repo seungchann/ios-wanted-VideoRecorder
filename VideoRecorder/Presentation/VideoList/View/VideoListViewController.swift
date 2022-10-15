@@ -66,21 +66,13 @@ class VideoListViewController: UIViewController {
         setupConstraints()
         configureView()
         bind()
-        notificationRegister()
+//        notificationRegister()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.isNavigationBarHidden = true
-        viewModel.items = MediaFileManager.shared.fetchJson()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
+        self.viewModel.items = MediaFileManager.shared.fetchJson()
         updateItems()
-//        for work in works {
-//            DispatchQueue.main.async {
-//                work()
-//            }
-//        }
     }
 }
 
@@ -152,12 +144,12 @@ extension VideoListViewController {
         videoListView.reloadData()
     }
     
-    func notificationRegister() {
-        NotificationCenter.default.addObserver(forName: Notification.Name("mediaInfo_updated"), object: nil, queue: .main) { [weak self] _ in
-            guard let self = self else { return }
-            self.works.append(self.updateItems)
-        }
-    }
+//    func notificationRegister() {
+//        NotificationCenter.default.addObserver(forName: Notification.Name("mediaInfo_updated"), object: nil, queue: .main) { [weak self] _ in
+//            guard let self = self else { return }
+//            self.works.append(self.updateItems)
+//        }
+//    }
     
     @objc func showRecordVC() {
         let vc = RecordViewController()
