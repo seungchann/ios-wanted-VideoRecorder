@@ -59,14 +59,31 @@ class MediaFileManager {
         putJson(url: fileUrl, originData: data, newModel: video)
     }
     
-    func fetchJson() -> [Video] {
+//    func fetchJson() -> [Video] {
+//        guard let (_, fileUrl) = createUrl() else { return [] }
+//        guard let data = try? Data(contentsOf: fileUrl) else { return [] }
+//
+//        do {
+//            let decoder = JSONDecoder()
+//            let jsonArray = try decoder.decode([Video].self, from: data)
+//            return jsonArray
+//        } catch {
+//            print(error.localizedDescription)
+//            return []
+//        }
+//    }
+    
+    func fetchJson() -> [VideoListItemViewModel] {
         guard let (_, fileUrl) = createUrl() else { return [] }
         guard let data = try? Data(contentsOf: fileUrl) else { return [] }
-        
+        var videoListItemViewModels = [VideoListItemViewModel]()
         do {
             let decoder = JSONDecoder()
             let jsonArray = try decoder.decode([Video].self, from: data)
-            return jsonArray
+            for video in jsonArray {
+                videoListItemViewModels.append(VideoListItemViewModel(video: video))
+            }
+            return videoListItemViewModels
         } catch {
             print(error.localizedDescription)
             return []
@@ -82,6 +99,7 @@ class MediaFileManager {
                 json.append(new)
             let data = try! JSONEncoder().encode(json)
             try data.write(to: fileUrl, options: [.atomic])
+            NotificationCenter.default.post(name: Notification.Name("mediaInfo_updated"), object: nil)
         } catch {
             print(error.localizedDescription)
         }
@@ -142,7 +160,7 @@ extension MediaFileManager {
     
     // MARK: TEST FUNC
     /// recording finish 상황 videoOutput 발생 및 저장 & 백업
-    func test_recording_finish_after_rename() {
+    func test_recording_finish_after_rename(_ completion: @escaping(FirebaseStorageManager.StorageParameter) -> Void){
         
         let mm = MediaFileManager.shared
         let date = Date()
@@ -164,13 +182,13 @@ extension MediaFileManager {
             try? FileManager.default.copyItem(atPath: dummyUrl.relativePath, toPath: outputUrl.relativePath)
             
             // set filename & store
-            let video = Video(id: key, title: filename, releaseDate: date, duration: 24, thumbnailPath: outputUrl.absoluteString)
-            
-            try mm.storeMediaInfo(video: video)
-            
+//            let video = Video(id: key, title: filename, releaseDate: date, duration: 24, thumbnailPath: outputUrl.absoluteString)
+//            
+//            try mm.storeMediaInfo(video: video)
+//
             let param = FirebaseStorageManager.StorageParameter(id: key, filename: filename, url: outputUrl)
-            FirebaseStorageManager.shared.backup(param)
-            
+//            FirebaseStorageManager.shared.backup(param)
+            completion(param)
         } catch {
             print(error.localizedDescription)
         }

@@ -31,15 +31,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        let videoData5 = VideoListItemViewModel(video: Video(id: "dd",title: "Bridge", releaseDate: Date(), duration: 3600, thumbnailPath: ""))
 //
 //        let testViewModel = VideoListViewModel(videoItems: [videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5, videoData1, videoData2, videoData3, videoData4, videoData5,])
+//        MediaFileManager.shared.test_recording_finish_after_rename()
         
-        var videos = [VideoListItemViewModel]()
-        for video in MediaFileManager.shared.fetchJson() {
-            videos.append(VideoListItemViewModel(video: video))
+        
+        guard let (dirUrl, _) = MediaFileManager.shared.createUrl() else {
+            return
         }
+        print(dirUrl)
+        
+        let videos = MediaFileManager.shared.fetchJson()
         let testViewModel = VideoListViewModel(videoItems: videos)
         
         let mainViewController = VideoListViewController(viewModel: testViewModel)
-        
+//        let mainViewController = RecordViewController()
         let navigationController = UINavigationController(rootViewController: mainViewController)
         
         window?.rootViewController = navigationController
