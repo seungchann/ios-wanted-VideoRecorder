@@ -9,11 +9,13 @@ import UIKit
 
 class VideoListViewController: UIViewController {
     var viewModel: VideoListViewModel
+    var works: [(()-> Void)]
     
     // Properties
     let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Video List"
+        label.tintColor = UIColor(named: "foregroundColorAsset")
         label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -21,10 +23,11 @@ class VideoListViewController: UIViewController {
     
     let menuButton: UIButton = {
         let view = UIButton()
-        view.setImage(UIImage(systemName: "line.3.horizontal"), for: .normal)
+        let image = UIImage(systemName: "line.3.horizontal") ?? UIImage(systemName: "list.bullet")
+        view.setImage(image , for: .normal)
+        view.tintColor = UIColor(named: "foregroundColorAsset")
         view.contentHorizontalAlignment = .fill
         view.contentVerticalAlignment = .fill
-        view.tintColor = .black
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -34,7 +37,7 @@ class VideoListViewController: UIViewController {
         view.setImage(UIImage(systemName: "video.fill"), for: .normal)
         view.contentHorizontalAlignment = .fill
         view.contentVerticalAlignment = .fill
-        view.tintColor = .black
+        view.tintColor = UIColor(named: "foregroundColorAsset")
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -47,6 +50,7 @@ class VideoListViewController: UIViewController {
     
     init(viewModel: VideoListViewModel) {
         self.viewModel = viewModel
+        self.works = []
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -56,12 +60,27 @@ class VideoListViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "backgroundColorAsset")
         // Do any additional setup after loading the view.
         setupViews()
         setupConstraints()
         configureView()
         bind()
+        notificationRegister()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.isNavigationBarHidden = true
+        viewModel.items = MediaFileManager.shared.fetchJson()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        updateItems()
+//        for work in works {
+//            DispatchQueue.main.async {
+//                work()
+//            }
+//        }
     }
 }
 
@@ -72,9 +91,12 @@ extension VideoListViewController {
     }
     
     func setupConstraints() {
+        
+        let safeArea = view.safeAreaLayoutGuide
+        
         NSLayoutConstraint.activate([
-            menuButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            menuButton.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 60),
+            menuButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            menuButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 30),
             menuButton.heightAnchor.constraint(equalToConstant: 20),
             menuButton.widthAnchor.constraint(equalTo: menuButton.heightAnchor, multiplier: 1.2),
         ])
@@ -85,17 +107,17 @@ extension VideoListViewController {
         ])
         
         NSLayoutConstraint.activate([
-            cameraButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            cameraButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
             cameraButton.centerYAnchor.constraint(equalTo: self.menuButton.centerYAnchor),
             cameraButton.heightAnchor.constraint(equalToConstant: 20),
             cameraButton.widthAnchor.constraint(equalTo: cameraButton.heightAnchor, multiplier: 1.5),
         ])
         
         NSLayoutConstraint.activate([
-            videoListView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            videoListView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            videoListView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            videoListView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             videoListView.topAnchor.constraint(equalTo: menuButton.bottomAnchor, constant: 30),
-            videoListView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            videoListView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
         ])
     }
     
@@ -105,6 +127,8 @@ extension VideoListViewController {
         videoListView.register(VideoListViewCell.self, forCellReuseIdentifier: VideoListViewCell.identifier)
         videoListView.register(VideoListViewLoadingCell.self, forCellReuseIdentifier: VideoListViewLoadingCell.identifier)
         cameraButton.addTarget(nil, action: #selector(showRecordVC), for: .touchUpInside)
+        videoListView.backgroundColor = UIColor(named: "backgroundColorAsset")
+        self.navigationItem.backButtonTitle = ""
     }
     
     func bind() {
@@ -126,6 +150,20 @@ extension VideoListViewController {
 extension VideoListViewController {
     func updateItems() {
         videoListView.reloadData()
+    }
+    
+    func notificationRegister() {
+        NotificationCenter.default.addObserver(forName: Notification.Name("mediaInfo_updated"), object: nil, queue: .main) { [weak self] _ in
+            guard let self = self else { return }
+            self.works.append(self.updateItems)
+        }
+    }
+    
+    @objc func showRecordVC() {
+        let vc = RecordViewController()
+        vc.modalPresentationStyle = .fullScreen
+        vc.modalTransitionStyle = .coverVertical
+        self.present(vc, animated: true)
     }
 }
 
@@ -206,11 +244,4 @@ extension VideoListViewController: UIScrollViewDelegate {
     }
 }
 
-extension VideoListViewController {
-    @objc func showRecordVC() {
-        let vc = RecordViewController()
-        vc.modalPresentationStyle = .fullScreen
-        vc.modalTransitionStyle = .coverVertical
-        self.present(vc, animated: true)
-    }
-}
+

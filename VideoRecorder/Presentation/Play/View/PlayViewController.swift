@@ -22,7 +22,7 @@ class PlayViewController: AVPlayerViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = UIColor(named: "backgroundColorAsset")
         self.player = self.viewModel.loadVideo()
         self.player?.play()
         configureView()
@@ -46,6 +46,7 @@ extension PlayViewController {
 
 extension PlayViewController {
     func setupNavigationbar() {
+        self.navigationController?.isNavigationBarHidden = false
         if #available(iOS 15, *) {
             let barAppearance = UINavigationBarAppearance()
             barAppearance.backgroundColor = .white
@@ -59,7 +60,7 @@ extension PlayViewController {
                 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.bold)
             ]
         }
-        self.navigationController?.navigationBar.tintColor = .black
+        self.navigationController?.navigationBar.tintColor = UIColor(named: "foregroundColorAsset")
         self.navigationController?.navigationBar.topItem?.backButtonTitle = ""
     }
 }
