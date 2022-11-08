@@ -31,6 +31,7 @@ class RecordViewController: UIViewController {
     let circleImage: UIButton = {
         let view = UIButton()
         let configuration = UIImage.SymbolConfiguration(pointSize: 60)
+        view.accessibilityIdentifier = "record"
         view.setImage(UIImage(systemName: "circle", withConfiguration: configuration), for: .normal)
         view.tintColor = .white
         view.adjustsImageWhenHighlighted = false
@@ -63,6 +64,7 @@ class RecordViewController: UIViewController {
     let exitButton: UIButton = {
         let view = UIButton()
         let configuration = UIImage.SymbolConfiguration(pointSize: 30)
+        view.accessibilityIdentifier = "toMain"
         view.setImage(UIImage(systemName: "xmark.circle.fill", withConfiguration: configuration), for: .normal)
         view.tintColor = .darkGray
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -91,15 +93,17 @@ class RecordViewController: UIViewController {
     var uuid: UUID?
     var recordingTimer: Timer?
     var viewModel: RecordViewModel
+    var listViewModel: VideoListViewModel
        
-    init(viewModel: RecordViewModel) {
-       self.viewModel = viewModel
-       super.init(nibName: nil, bundle: nil)
+    init(viewModel: RecordViewModel, listViewModel: VideoListViewModel) {
+        self.viewModel = viewModel
+        self.listViewModel = listViewModel
+        super.init(nibName: nil, bundle: nil)
     }
     
-    convenience init() {
+    convenience init(listViewModel: VideoListViewModel) {
         let viewModel = RecordViewModel()
-        self.init(viewModel: viewModel)
+        self.init(viewModel: viewModel, listViewModel: listViewModel)
     }
     
     required init?(coder: NSCoder) {
@@ -119,7 +123,7 @@ class RecordViewController: UIViewController {
     }
     
     deinit {
-        print("deinit")
+        print("deinit recordVC")
     }
 }
 
@@ -206,21 +210,28 @@ extension RecordViewController: AVCaptureFileOutputRecordingDelegate {
                 let param = FirebaseStorageManager.StorageParameter(id: self.uuid!.uuidString, url: outputFileURL)
                 FirebaseStorageManager.shared.backup(param) { isUploaded in
                     // backup task end
+                    do {
+                        let videos = try MediaFileManager.shared.getVideos()
+                        self.listViewModel.totalItems = videos
+                        self.listViewModel.didReceiveLoadAction()
+                    } catch {
+                        self.listViewModel.totalItems = []
+                        self.listViewModel.didReceiveLoadAction()
+                    }
                 }
             }
         }
     }
     
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
-        print("didStartRecordingTo", fileURL)
+        print("didStartRecordingTo")
     }
 }
 
 extension RecordViewController {
     
     @objc func goToPrevious() {
-        // to main
-        self.dismiss(animated: true)
+        navigationController?.popViewController(animated: true)
     }
     
     @objc func swapCameraPosition() {
@@ -312,6 +323,13 @@ extension RecordViewController {
                 let param = FirebaseStorageManager.StorageParameter(id: self.uuid!.uuidString, url: outputFileURL!)
                 FirebaseStorageManager.shared.backup(param) { isUploaded in
                     // backup task end
+                    do {
+                        let videos = try MediaFileManager.shared.getVideos()
+                        self.listViewModel.totalItems = videos
+                        self.listViewModel.didReceiveLoadAction()
+                    } catch {
+                        self.listViewModel.totalItems = []
+                        self.listViewModel.didReceiveLoadAction()
                     }
                 }
             }

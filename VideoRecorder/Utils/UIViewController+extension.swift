@@ -21,6 +21,7 @@ extension UIViewController {
         objc_setAssociatedObject(self, &textHandlerKey, textChangeHandler, .OBJC_ASSOCIATION_RETAIN)
 
         alertController.addTextField { textField in
+            textField.accessibilityIdentifier = "filename"
             textField.placeholder = placeholder
             textField.clearButtonMode = .whileEditing
             textField.borderStyle = .none
@@ -34,6 +35,7 @@ extension UIViewController {
             okHandler(text)
             objc_setAssociatedObject(self, &textHandlerKey, nil, .OBJC_ASSOCIATION_RETAIN)
         })
+        okAction.accessibilityIdentifier = "filename_ok"
         okAction.isEnabled = false
         alertController.addAction(okAction)
 
@@ -44,7 +46,6 @@ extension UIViewController {
 
         present(alertController, animated: true, completion: nil)
     }
-
 }
 
 class TextFieldTextChangeHandler {
