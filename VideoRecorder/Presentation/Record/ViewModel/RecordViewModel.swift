@@ -37,7 +37,7 @@ extension RecordViewModel {
         case .restricted: // The user can't grant access due to restrictions.
             completion(false)
             return
-        @unknown default:
+        default:
             fatalError("unknown authorizationStatus")
         }
     }

@@ -15,7 +15,7 @@ class VideoListViewController: UIViewController {
     let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Video List"
-        label.tintColor = UIColor(named: "foregroundColorAsset")
+        label.tintColor = UIColor.DefaultTheme.mainForeground
         label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -25,7 +25,7 @@ class VideoListViewController: UIViewController {
         let view = UIButton()
         let image = UIImage(systemName: "line.3.horizontal") ?? UIImage(systemName: "list.bullet")
         view.setImage(image , for: .normal)
-        view.tintColor = UIColor(named: "foregroundColorAsset")
+        view.tintColor = UIColor.DefaultTheme.mainForeground
         view.contentHorizontalAlignment = .fill
         view.contentVerticalAlignment = .fill
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -38,7 +38,7 @@ class VideoListViewController: UIViewController {
         view.setImage(UIImage(systemName: "video.fill"), for: .normal)
         view.contentHorizontalAlignment = .fill
         view.contentVerticalAlignment = .fill
-        view.tintColor = UIColor(named: "foregroundColorAsset")
+        view.tintColor = UIColor.DefaultTheme.mainForeground
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -61,7 +61,7 @@ class VideoListViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(named: "backgroundColorAsset")
+        view.backgroundColor = UIColor.DefaultTheme.mainBackground
         // Do any additional setup after loading the view.
         setupViews()
         setupConstraints()
@@ -117,7 +117,7 @@ extension VideoListViewController {
         videoListView.register(VideoListViewCell.self, forCellReuseIdentifier: VideoListViewCell.identifier)
         videoListView.register(VideoListViewLoadingCell.self, forCellReuseIdentifier: VideoListViewLoadingCell.identifier)
         cameraButton.addTarget(nil, action: #selector(showRecordVC), for: .touchUpInside)
-        videoListView.backgroundColor = UIColor(named: "backgroundColorAsset")
+        videoListView.backgroundColor = UIColor.DefaultTheme.mainBackground 
         self.navigationItem.backButtonTitle = ""
     }
     

@@ -46,22 +46,23 @@ class FirebaseStorageManager {
         let path = "\(FOLDER_NAME)/\(id).\(FILE_TYPE)"
         let storageRef = storage.reference(withPath: path)
         let result = try? await storageRef.delete()
+        print("Sucess Video Delete")
         return result != nil
     }
     
     func backup(_ param: StorageParameter, completion: @escaping (Bool) -> Void) {
         BGTaskManager.shared.beginBackgroundTask(withName: "video_backup") { identifier in
             Task {
-                debugPrint("Video Uploading...")
+                print("Video Uploading...")
                 guard let metadata = try? await self.upload(param) else {
                     identifier.endBackgroundTask()
-                    debugPrint("Failed Video Upload.")
+                    print("Failed Video Upload")
                     completion(false)
                     return
                 }
                 print(metadata)
                 identifier.endBackgroundTask()
-                debugPrint("Sucess Video Upload.")
+                print("Sucess Video Upload")
                 completion(true)
             }
         }
