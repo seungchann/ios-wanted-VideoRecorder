@@ -53,7 +53,10 @@ extension VideoListViewModel {
         Task {
             // MARK: - 로컬부터 파일삭제
             if await FirebaseStorageManager.shared.delete(video.id.value) {
-                MediaFileManager.shared.deleteMedia(video.id.value)
+                if !MediaFileManager.shared.deleteVideo(id: video.id.value) {
+                    // failed delete video
+                    // but 보이는 리스트에서는 일시적으로 삭제됨.
+                }
             }
         }
         self.items.remove(at: index)

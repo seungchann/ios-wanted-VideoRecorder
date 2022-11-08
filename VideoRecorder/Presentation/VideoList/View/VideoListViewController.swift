@@ -34,6 +34,7 @@ class VideoListViewController: UIViewController {
     
     let cameraButton: UIButton = {
         let view = UIButton()
+        view.accessibilityIdentifier = "camera"
         view.setImage(UIImage(systemName: "video.fill"), for: .normal)
         view.contentHorizontalAlignment = .fill
         view.contentVerticalAlignment = .fill
@@ -66,13 +67,10 @@ class VideoListViewController: UIViewController {
         setupConstraints()
         configureView()
         bind()
-//        notificationRegister()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.isNavigationBarHidden = true
-        self.viewModel.items = MediaFileManager.shared.fetchJson()
-        updateItems()
     }
 }
 
@@ -144,18 +142,9 @@ extension VideoListViewController {
         videoListView.reloadData()
     }
     
-//    func notificationRegister() {
-//        NotificationCenter.default.addObserver(forName: Notification.Name("mediaInfo_updated"), object: nil, queue: .main) { [weak self] _ in
-//            guard let self = self else { return }
-//            self.works.append(self.updateItems)
-//        }
-//    }
-    
     @objc func showRecordVC() {
-        let vc = RecordViewController()
-        vc.modalPresentationStyle = .fullScreen
-        vc.modalTransitionStyle = .coverVertical
-        self.present(vc, animated: true)
+        let recordVC = RecordViewController(listViewModel: viewModel)
+        self.navigationController?.pushViewController(recordVC, animated: true)
     }
 }
 

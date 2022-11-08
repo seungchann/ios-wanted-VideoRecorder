@@ -11,33 +11,34 @@ import BackgroundTasks
 
 class FirebaseStorageManager {
     
+    let FOLDER_NAME = "Videos"
+    let FILE_TYPE = "mp4"
+    
     enum StorageError: Error {
-        case noMetaData
+        case uploadFailed
     }
     
     struct StorageParameter {
         let id: String
-        let filename: String
         let url: URL
         
-        init(id: String, filename: String, url: URL) {
+        init(id: String, url: URL) {
             self.id = id
-            self.filename = filename
             self.url = url
         }
     }
     
     static let shared = FirebaseStorageManager()
-    let storage = Storage.storage()
-    let FOLDER_NAME = "Videos"
-    let FILE_TYPE = "mp4"
+    private let storage: Storage
     
-    private init() { }
+    private init(storage: Storage = Storage.storage()) {
+        self.storage = storage
+    }
     
     func upload(_ param: StorageParameter) async throws -> StorageMetadata {
         let path = "\(FOLDER_NAME)/\(param.id).\(FILE_TYPE)"
         let storageRef = storage.reference(withPath: path)
-        guard let metadata = try? await storageRef.putFileAsync(from: param.url) else { throw StorageError.noMetaData }
+        guard let metadata = try? await storageRef.putFileAsync(from: param.url) else { throw StorageError.uploadFailed }
         return metadata
     }
     
@@ -48,20 +49,20 @@ class FirebaseStorageManager {
         return result != nil
     }
     
-    func backup(_ param: StorageParameter) {
-        BGTaskManager.shared.beginBackgroundTask(withName: "media_backup") { identifier in
-            DispatchQueue.main.async { [weak self] in
-                print("Task Resume")
-                Task {
-                    guard let metadata = try? await self!.upload(param) else {
-                        identifier.endBackgroundTask()
-                        print("Task Failed But Finish")
-                        return
-                    }
-                    print(metadata)
+    func backup(_ param: StorageParameter, completion: @escaping (Bool) -> Void) {
+        BGTaskManager.shared.beginBackgroundTask(withName: "video_backup") { identifier in
+            Task {
+                debugPrint("Video Uploading...")
+                guard let metadata = try? await self.upload(param) else {
                     identifier.endBackgroundTask()
-                    print("Task Complete")
+                    debugPrint("Failed Video Upload.")
+                    completion(false)
+                    return
                 }
+                print(metadata)
+                identifier.endBackgroundTask()
+                debugPrint("Sucess Video Upload.")
+                completion(true)
             }
         }
     }

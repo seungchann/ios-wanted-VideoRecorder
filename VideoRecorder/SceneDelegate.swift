@@ -19,12 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        guard let (dirUrl, _) = MediaFileManager.shared.createUrl() else {
-            return
-        }
-        print(dirUrl)
-        
-        let videos = MediaFileManager.shared.fetchJson()
+        let videos = try! MediaFileManager.shared.getVideos()
         let testViewModel = VideoListViewModel(videoItems: videos)
         
         let mainViewController = VideoListViewController(viewModel: testViewModel)
