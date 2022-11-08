@@ -200,23 +200,27 @@ extension RecordViewController: AVCaptureFileOutputRecordingDelegate {
         
         let nowDate = Date(timeInterval: 32400, since: Date())
         let duration = Int(output.recordedDuration.seconds)
-        let position = viewModel.captureSession.inputs.first?.ports.first?.sourceDevicePosition
         
         self.askForTextAndConfirmWithAlert(title: "알림", placeholder: "영상의 제목을 입력해주세요") { [weak self]
             filename in
-            
+
             guard let self = self else { return }
             
-            guard let filename = filename else {
-                MediaFileManager.shared.deleteMedia(self.uuid!.uuidString)
+            guard let filename = filename else { // 취소시 저장된 영상은 삭제처리.
+                if !MediaFileManager.shared.deleteVideo(id: self.uuid!.uuidString) {
+                    print("영상이 완전히 삭제되지않음 id: \(self.uuid!.uuidString)")
+                }
                 return
             }
             
-            let model = Video(id: self.uuid!.uuidString, title: filename, releaseDate: nowDate, duration: duration, thumbnailPath: outputFileURL.absoluteString)
-            MediaFileManager.shared.storeMediaInfo(video: model)
+            let video = Video(id: self.uuid!.uuidString, title: filename, releaseDate: nowDate, duration: duration, thumbnailPath: outputFileURL.absoluteString)
             
-            let param = FirebaseStorageManager.StorageParameter(id: self.uuid!.uuidString, filename: filename, url: outputFileURL)
-            FirebaseStorageManager.shared.backup(param)
+            if MediaFileManager.shared.addVideo(video: video) {
+                let param = FirebaseStorageManager.StorageParameter(id: self.uuid!.uuidString, url: outputFileURL)
+                FirebaseStorageManager.shared.backup(param) { isUploaded in
+                    // backup task end
+                }
+            }
         }
     }
     
@@ -244,13 +248,15 @@ extension RecordViewController {
         self.timeLabel.text = duration
     }
     
-    // Recording Methods
     @objc func startRecording() {
-//        guard let videoOutput = viewModel.videoOutput else {
-//            print("No video Output")
-//            finishRecording()
-//            return
-//        }
+        
+        guard let videoOutput = viewModel.videoOutput else {
+            print("No video Output")
+            // MARK: TEST
+            test_finish_recording()
+            return
+        }
+        
         if viewModel.videoOutput.isRecording {
             stopRecording()
             return
@@ -266,10 +272,7 @@ extension RecordViewController {
             self.recordButton.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
         }
         
-        guard let (dirUrl, _) = MediaFileManager.shared.createUrl() else {
-            return
-        }
-        
+        guard let dirUrl = MediaFileManager.shared.createUrl(path: .videos) else { return }
         uuid = UUID()
         let saveUrl = dirUrl.appendingPathComponent("\(uuid!.uuidString).mp4")
         viewModel.videoOutput.startRecording(to: saveUrl, recordingDelegate: self)
@@ -285,6 +288,46 @@ extension RecordViewController {
                 self.recordButton.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
             }
             swapCameraPositionButton.isEnabled = true
+        }
+    }
+}
+
+// MARK: TEST
+extension RecordViewController {
+    /*
+        Mock data를 생성
+        이름 설정시 data를 저장 및 백업
+        미설정 시 data를 삭제
+     */
+    func test_finish_recording() {
+        uuid = UUID()
+        self.askForTextAndConfirmWithAlert(title: "알림", placeholder: "영상의 제목을 입력해주세요") { [weak self]
+            filename in
+            
+            guard let self = self else { return }
+            
+            // 이름 미지정시 생성되엇던 영상 삭제
+            guard let filename = filename else { // 취소시 저장된 영상은 삭제처리.
+                if !MediaFileManager.shared.deleteVideo(id: self.uuid!.uuidString) {
+                    print("영상이 완전히 삭제되지않음 id: \(self.uuid!.uuidString)")
+                }
+                return
+            }
+            
+            // add dummy
+            var videoUrl = MediaFileManager.shared.createUrl(path: .videos)
+            videoUrl = videoUrl?.appendingPathComponent(self.uuid!.uuidString, conformingTo: .mpeg4Movie)
+            let outputFileURL = MediaFileManager.shared.addDummy(url: videoUrl!)
+            
+            // add video, backup
+            let video = Video(id: self.uuid!.uuidString, title: filename, releaseDate: Date(), duration: 4, thumbnailPath: outputFileURL!.relativePath)
+            if MediaFileManager.shared.addVideo(video: video) {
+                let param = FirebaseStorageManager.StorageParameter(id: self.uuid!.uuidString, url: outputFileURL!)
+                FirebaseStorageManager.shared.backup(param) { isUploaded in
+                    // backup task end
+                    }
+                }
+            }
         }
     }
 }
