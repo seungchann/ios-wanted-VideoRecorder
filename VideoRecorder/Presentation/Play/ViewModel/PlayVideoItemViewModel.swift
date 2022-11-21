@@ -28,14 +28,10 @@ extension PlayVideoItemViewModel {
     }
     
     func makeURL(id: String) -> URL {
-        let dirUrl = MediaFileManager.shared.createUrl(path: .videos)
-//        guard let (dirUrl, _) = MediaFileManager.shared.createUrl() else {
-//            return URL(string: "")!
-//        }
-
-        let newUrl = dirUrl!.appendingPathComponent("\(id).mp4")
-        
+        guard let dirUrl = try? MediaFileManager.shared.createUrl(path: .videos) else { return URL(string: "/")! }
+        let newUrl = dirUrl.appendingPathComponent("\(id).mp4")
         print(newUrl)
+        
         // 로컬 path 로 부터 mp4 영상 player 에 import
         return newUrl
     }

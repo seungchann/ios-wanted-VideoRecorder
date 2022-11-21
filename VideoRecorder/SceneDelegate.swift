@@ -19,11 +19,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        let videos = try! MediaFileManager.shared.getVideos()
-        let testViewModel = VideoListViewModel(videoItems: videos)
-        
-        let mainViewController = VideoListViewController(viewModel: testViewModel)
-
+        let videos = MediaFileManager.shared.getVideos()
+        let viewModel = VideoListViewModel(videoItems: videos)
+        let mainViewController = VideoListViewController(viewModel: viewModel)
         let navigationController = UINavigationController(rootViewController: mainViewController)
         
         window?.rootViewController = navigationController

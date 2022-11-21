@@ -14,7 +14,6 @@ class MediaFileManager {
     
     enum MediaFileManagerError: Error {
         case NotFoundURL
-        case FailedEncoding
     }
     
     enum PathOption: String {
@@ -40,66 +39,58 @@ class MediaFileManager {
         }
     }
     
-    func createUrl(path: PathOption) -> URL? {
-        if let url = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
-            do {
-                var url = url
-                
-                switch path {
-                case .document:
-                    break
-                case .root: // VideoRecorder
-                    url = url.appendingPathComponent(path.rawValue)
-                    try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
-                    break
-                    
-                case .videos: // VideoRecorder/Videos
-                    url = url.appendingPathComponent(path.rawValue)
-                    try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
-                    break
-                    
-                case .videosInfo: // VideoRecorder/Videos/Videos.json
-                    url = url.appendingPathComponent(PathOption.videos.rawValue)
-                    try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
-                    url = url.appendingPathComponent("Videos")
-                    url = url.appendingPathExtension("json")
-                    break
-                    
-                }
-                return url
-            } catch {
-                print(error.localizedDescription)
-                return nil
-            }
-        } else {
-            print("Can not create url")
-            return nil
-        }
-    }
-    
-    func addDummy(url outputUrl: URL) -> URL? {
-        guard let docUrl = createUrl(path: .document) else { return nil }
-        let dummyUrl = docUrl.appendingPathComponent("sampleVideo.mp4")
-        do {
-            try fileManager.copyItem(atPath: dummyUrl.relativePath, toPath: outputUrl.relativePath)
-            return outputUrl
-        } catch {
-            print(error.localizedDescription)
-            return nil
-        }
-    }
-    
-    func getVideos() throws -> [VideoListItemViewModel] {
-        guard let url = createUrl(path: .videosInfo) else {
+    func createUrl(path: PathOption) throws -> URL {
+        guard let baseUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
             throw MediaFileManagerError.NotFoundURL
         }
         
-        guard let data = try? Data(contentsOf: url) else {
-            print("Not found json")
-            return []
-        }
+        var url = baseUrl
         
+        switch path {
+        case .document:
+            break
+        case .root: // VideoRecorder
+            url = url.appendingPathComponent(path.rawValue)
+            try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+            break
+            
+        case .videos: // VideoRecorder/Videos
+            url = url.appendingPathComponent(path.rawValue)
+            try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+            break
+            
+        case .videosInfo: // VideoRecorder/Videos/Videos.json
+            url = url.appendingPathComponent(PathOption.videos.rawValue)
+            try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+            url = url.appendingPathComponent("Videos")
+            url = url.appendingPathExtension("json")
+            break
+            
+        }
+        return url
+    }
+    
+    func addDummy(url outputUrl: URL) -> URL? {
         do {
+            let docUrl = try createUrl(path: .document)
+            let dummyUrl = docUrl.appendingPathComponent("sampleVideo.mp4")
+            try fileManager.copyItem(atPath: dummyUrl.relativePath, toPath: outputUrl.relativePath)
+            return outputUrl
+        } catch {
+            print(error)
+        }
+        return nil
+    }
+    
+    func getVideos() -> [VideoListItemViewModel] {
+        do {
+            let url = try createUrl(path: .videosInfo)
+            
+            guard let data = try? Data(contentsOf: url) else {
+                print("NotFoundData")
+                return []
+            }
+            
             let decoder = JSONDecoder()
             let videos = try decoder.decode([Video].self, from: data)
             var videoListItemViewModels = [VideoListItemViewModel]()
@@ -110,35 +101,32 @@ class MediaFileManager {
             }
             return videoListItemViewModels
         } catch {
-            print(error.localizedDescription)
-            return []
+            print(error)
         }
+        return []
     }
     
     private func getVideosInfo() throws -> [Video] {
-        guard let url = createUrl(path: .videosInfo) else {
-            throw MediaFileManagerError.NotFoundURL
-        }
-        
-        guard let data = try? Data(contentsOf: url) else {
-            print("Not found json")
-            return []
-        }
-        
         do {
+            let url = try createUrl(path: .videosInfo)
+            
+            guard let data = try? Data(contentsOf: url) else {
+                print("NotFoundData")
+                return []
+            }
+            
             let decoder = JSONDecoder()
             let videos = try decoder.decode([Video].self, from: data)
             return videos
         } catch {
-            print(error.localizedDescription)
-            return []
+            print(error)
         }
+        return []
     }
     
     func addVideo(video: Video) -> Bool {
-        guard let url = createUrl(path: .videosInfo) else { return false }
-        
         do {
+            let url = try createUrl(path: .videosInfo)
             var videos = try getVideosInfo()
             videos.append(video)
             let data = try! JSONEncoder().encode(videos)
@@ -147,17 +135,18 @@ class MediaFileManager {
             prettyPrint(videos: [video])
             return true
         } catch {
-            print(error.localizedDescription)
+            print(error)
         }
         return false
     }
     
     func deleteVideo(id: String) -> Bool {
-        guard let videosUrl = createUrl(path: .videos) else { return false }
-        guard let jsonUrl = createUrl(path: .videosInfo) else { return false }
-        
-        let videoUrl = videosUrl.appendingPathComponent(id, conformingTo: .mpeg4Movie)
         do {
+            let videosUrl = try createUrl(path: .videos)
+            let jsonUrl = try createUrl(path: .videosInfo)
+            
+            let videoUrl = videosUrl.appendingPathComponent(id, conformingTo: .mpeg4Movie)
+        
             var videos = try getVideosInfo()
             // json에서 해당 video정보 제거
             let data = try JSONEncoder().encode(videos.filter({ $0.id != id }))
@@ -171,10 +160,9 @@ class MediaFileManager {
                 return !fileManager.fileExists(atPath: videoUrl.relativePath)
             } else {
                 print("Not deleted data about \(id).mp4")
-                return false
             }
         } catch {
-            print(error.localizedDescription)
+            print(error)
         }
         return false
     }
