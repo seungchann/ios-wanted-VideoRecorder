@@ -119,6 +119,7 @@ class RecordViewController: UIViewController {
         
         viewModel.checkAuthorization { isAuth in
             print("auth: ",isAuth)
+            // simulator 테스트시 주석처리할것.
             self.viewModel.setupSession()
         }
     }
@@ -258,7 +259,7 @@ extension RecordViewController {
         
         guard let videoOutput = viewModel.videoOutput else {
             print("No video Output")
-            // MARK: TEST
+            // simulator 테스트시 주석 해제할것.
 //            test_finish_recording()
             return
         }
