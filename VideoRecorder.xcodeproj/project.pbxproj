@@ -34,6 +34,7 @@
 		F892F46928FA3AAE005DB4C2 /* BGTaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F892F46428FA3AAE005DB4C2 /* BGTaskManager.swift */; };
 		F892F46A28FA3AAE005DB4C2 /* MediaFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F892F46528FA3AAE005DB4C2 /* MediaFileManager.swift */; };
 		F892F46B28FA3AAE005DB4C2 /* ThumbnailMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F892F46628FA3AAE005DB4C2 /* ThumbnailMaker.swift */; };
+		F8BB0A38291A98C4003B5188 /* UIColor+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB0A37291A98C4003B5188 /* UIColor+extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,7 @@
 		F892F46428FA3AAE005DB4C2 /* BGTaskManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BGTaskManager.swift; sourceTree = "<group>"; };
 		F892F46528FA3AAE005DB4C2 /* MediaFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaFileManager.swift; sourceTree = "<group>"; };
 		F892F46628FA3AAE005DB4C2 /* ThumbnailMaker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThumbnailMaker.swift; sourceTree = "<group>"; };
+		F8BB0A37291A98C4003B5188 /* UIColor+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +194,7 @@
 				F892F46628FA3AAE005DB4C2 /* ThumbnailMaker.swift */,
 				F892F46228FA3AAE005DB4C2 /* UIViewController+extension.swift */,
 				64C9FF6E28F7D6FC00566C5F /* Observable.swift */,
+				F8BB0A37291A98C4003B5188 /* UIColor+extension.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 				644F8F7828F9179C005BD5DB /* FirstRowView.swift in Sources */,
 				F892F46B28FA3AAE005DB4C2 /* ThumbnailMaker.swift in Sources */,
 				F892F46128FA3A97005DB4C2 /* RecordViewController.swift in Sources */,
+				F8BB0A38291A98C4003B5188 /* UIColor+extension.swift in Sources */,
 				6321037828F06E7200CC1609 /* AppDelegate.swift in Sources */,
 				64C9FF7328F7D71C00566C5F /* Video.swift in Sources */,
 				644A0BFF28F9CD360067D5F2 /* VideoListLoadingCellContentView.swift in Sources */,

@@ -18,17 +18,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        
-        guard let (dirUrl, _) = MediaFileManager.shared.createUrl() else {
-            return
-        }
-        print(dirUrl)
-        
-        let videos = MediaFileManager.shared.fetchJson()
-        let testViewModel = VideoListViewModel(videoItems: videos)
-        
-        let mainViewController = VideoListViewController(viewModel: testViewModel)
 
+        // simulator로 영상저장 플로우를 테스트하려면 아래 디렉토리 내부에 Resources/sampleVideo.mp4를 복사하여 넣기.
+//        var documentUrl = try? MediaFileManager.shared.createUrl(path: .document)
+//        print("for debuging: ",documentUrl)
+        
+        let videos = MediaFileManager.shared.getVideos()
+        let viewModel = VideoListViewModel(videoItems: videos)
+        let mainViewController = VideoListViewController(viewModel: viewModel)
         let navigationController = UINavigationController(rootViewController: mainViewController)
         
         window?.rootViewController = navigationController

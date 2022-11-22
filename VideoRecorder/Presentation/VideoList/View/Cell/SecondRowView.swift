@@ -19,7 +19,7 @@ class SecondRowView: UIView {
     let releaseDateLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor(named: "subTextColorAsset")
+        label.textColor = UIColor.DefaultTheme.subText
         label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         return label
     }()
@@ -72,6 +72,6 @@ extension SecondRowView {
     
     func configureView() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = UIColor(named: "backgroundColorAsset")
+        self.backgroundColor = UIColor.DefaultTheme.mainBackground
     }
 }
