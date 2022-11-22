@@ -50,13 +50,13 @@ class VideoListViewModel {
 
 extension VideoListViewModel {
     func removeData(item video : VideoListItemViewModel, index: Int) {
+        // TODO: 각 작업이 실패할 경우 처리 구현 필요
         Task {
-            // MARK: - 로컬부터 파일삭제
-            if await FirebaseStorageManager.shared.delete(video.id.value) {
-                if !MediaFileManager.shared.deleteVideo(id: video.id.value) {
-                    // failed delete video
-                    // but 보이는 리스트에서는 일시적으로 삭제됨.
-                }
+            if !MediaFileManager.shared.deleteVideo(id: video.id.value) {
+                // 로컬 비디오 삭제 실패
+            }
+            if await !FirebaseStorageManager.shared.delete(video.id.value) {
+                // 백업 비디오 삭제 실패
             }
         }
         self.items.remove(at: index)
