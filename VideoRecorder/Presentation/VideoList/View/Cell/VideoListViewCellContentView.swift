@@ -64,7 +64,15 @@ extension VideoListViewCellContentView {
             self.viewModel = viewModel
             
             viewModel.id.subscribe { [weak self] id in
-                ThumbnailMaker.shared.generateThumnailAsync(filename: id, startOffsets: [1, 10]) { [weak self] thumbnailImage in
+                
+                guard let url = try? MediaFileManager.shared.createUrl(path: .videos) else {
+                    print("NotFoundURL")
+                    return
+                }
+                
+                let videoUrl = url.appendingPathComponent(id, conformingTo: .mpeg4Movie)
+                
+                ThumbnailMaker.shared.generateThumnailAsync(url: videoUrl, startOffsets: [1, 10]) { [weak self] thumbnailImage in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
                         self.firstRowView.thumbnailView.image = thumbnailImage

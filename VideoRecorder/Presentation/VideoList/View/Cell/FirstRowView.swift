@@ -77,7 +77,7 @@ extension FirstRowView {
     
     func configureView() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = UIColor(named: "backgroundColorAsset")
+        self.backgroundColor = UIColor.DefaultTheme.mainBackground
     }
 }
 
