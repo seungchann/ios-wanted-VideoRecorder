@@ -109,6 +109,7 @@ class Observable<T> {
   - Thumbnail 이미지가 이미지 뷰에 맞게 layer masking 작업
   - color Asset으로 다크모드, 라이트모드 대응
 - 두 번째 페이지
+  - Mock function 구현, Simulator를 이용한 테스트
   - UI 구현 담당
   - FireStorage 업로드, 삭제 인터페이스 구현
     - Background Task를 이용해 업로드
