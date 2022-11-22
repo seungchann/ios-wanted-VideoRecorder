@@ -14,9 +14,38 @@ class RecordViewModel {
     var videoOutput: AVCaptureMovieFileOutput!
     
     init() { }
+    
+    deinit {
+//        print("deinit RecordViewModel")
+    }
 }
 
 extension RecordViewModel {
+    
+    // TODO: 권한 요청 실패의경우 설정으로 안내하는 플로우가 필요
+    func checkAuthorization(_ completion: @escaping (Bool) -> Void) {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized: // The user has previously granted access to the camera.
+            // setup session
+            completion(true)
+            return
+            
+        case .notDetermined: // The user has not yet been asked for camera access.
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                completion(granted)
+            }
+
+        case .denied: // The user has previously denied access.
+            completion(false)
+            return
+            
+        case .restricted: // The user can't grant access due to restrictions.
+            completion(false)
+            return
+        default:
+            fatalError("unknown authorizationStatus")
+        }
+    }
     
     func setupSession() {
         captureSession.sessionPreset = .high
