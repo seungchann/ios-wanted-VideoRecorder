@@ -14,10 +14,15 @@ class RecordViewModel {
     var videoOutput: AVCaptureMovieFileOutput!
     
     init() { }
+    
+    deinit {
+//        print("deinit RecordViewModel")
+    }
 }
 
 extension RecordViewModel {
     
+    // TODO: 권한 요청 실패의경우 설정으로 안내하는 플로우가 필요
     func checkAuthorization(_ completion: @escaping (Bool) -> Void) {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized: // The user has previously granted access to the camera.
